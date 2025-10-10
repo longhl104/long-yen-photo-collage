@@ -153,6 +153,9 @@ export class Router {
   isRouteUnlocked(route) {
     if (!route.requiresUnlock) return true;
     
+    // Allow access in test mode
+    if (this.gameEngine.testMode) return true;
+    
     const requiredGame = route.unlockAfter;
     return this.gameEngine.gameState.completedGames.includes(requiredGame);
   }
