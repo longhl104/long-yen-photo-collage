@@ -43,7 +43,7 @@ export class MemoryMatchGame extends BaseGame {
     card.dataset.photo = photo.src;
     card.innerHTML = `
       <div class="card-front">
-        <img src="assets/images/heart.jpg" alt="Heart" class="heart-image">
+        <img src="assets/images/heart.svg" alt="Heart" class="heart-image">
       </div>
       <div class="card-back">
         <img src="${photo.src}" alt="Memory">
