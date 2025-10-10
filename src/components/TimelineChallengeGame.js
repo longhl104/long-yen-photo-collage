@@ -1,8 +1,10 @@
 import { BaseGame } from './BaseGame.js';
 import { DOMUtils } from '../utils/helpers.js';
 
-export class TimelineChallengeGame extends BaseGame {
-  constructor(gameEngine) {
+export class TimelineChallengeGame extends BaseGame
+{
+  constructor(gameEngine)
+  {
     super(gameEngine, 'timeline');
     this.selectedPhotos = [];
     this.userOrder = [];
@@ -15,64 +17,74 @@ export class TimelineChallengeGame extends BaseGame {
     this.photosPerRound = 4;
   }
 
-  start() {
+  start()
+  {
     DOMUtils.showScreen('timeline-screen');
+    this.createFullscreenModal();
     this.setupRound();
   }
 
-  setupRound() {
-    if (this.currentRound > this.totalRounds) {
+  setupRound()
+  {
+    if (this.currentRound > this.totalRounds)
+    {
       this.showFinalResults();
       return;
     }
 
     // Select random photos for this round
     this.selectPhotosForRound();
-    
+
     // Setup the UI
     this.renderPhotos();
     this.setupDropZone();
     this.updateProgress();
-    
+
     // Reset state
     this.userOrder = [];
     this.draggedElement = null;
     this.draggedFromDropzone = false;
   }
 
-  selectPhotosForRound() {
+  selectPhotosForRound()
+  {
     // Get a shuffled copy of all photos
     const availablePhotos = [...this.gameEngine.photos];
     this.shuffleArray(availablePhotos);
-    
+
     // Select photos that have different dates for better challenge
     this.selectedPhotos = [];
     const usedYears = new Set();
-    
-    for (const photo of availablePhotos) {
+
+    for (const photo of availablePhotos)
+    {
       if (this.selectedPhotos.length >= this.photosPerRound) break;
-      
+
       const photoYear = new Date(photo.date).getFullYear();
-      
+
       // Try to get photos from different years if possible
-      if (this.selectedPhotos.length < 2 || !usedYears.has(photoYear)) {
+      if (this.selectedPhotos.length < 2 || !usedYears.has(photoYear))
+      {
         this.selectedPhotos.push(photo);
         usedYears.add(photoYear);
       }
     }
-    
+
     // If we still need more photos, add any remaining ones
-    while (this.selectedPhotos.length < this.photosPerRound && availablePhotos.length > 0) {
+    while (this.selectedPhotos.length < this.photosPerRound && availablePhotos.length > 0)
+    {
       const photo = availablePhotos.find(p => !this.selectedPhotos.includes(p));
-      if (photo) {
+      if (photo)
+      {
         this.selectedPhotos.push(photo);
-      } else {
+      } else
+      {
         break;
       }
     }
 
     // Create the correct chronological order
-    this.correctOrder = [...this.selectedPhotos].sort((a, b) => 
+    this.correctOrder = [...this.selectedPhotos].sort((a, b) =>
       new Date(a.date) - new Date(b.date)
     );
 
@@ -80,18 +92,20 @@ export class TimelineChallengeGame extends BaseGame {
     this.shuffleArray(this.selectedPhotos);
   }
 
-  renderPhotos() {
+  renderPhotos()
+  {
     const photosContainer = document.getElementById('timeline-photos');
     if (!photosContainer) return;
 
     photosContainer.innerHTML = '';
 
-    this.selectedPhotos.forEach((photo, index) => {
+    this.selectedPhotos.forEach((photo, index) =>
+    {
       const photoElement = document.createElement('div');
       photoElement.className = 'timeline-photo';
       photoElement.draggable = true;
       photoElement.dataset.photoId = index;
-      
+
       const img = document.createElement('img');
       img.src = photo.src;
       img.alt = photo.moment || 'Memory';
@@ -99,7 +113,7 @@ export class TimelineChallengeGame extends BaseGame {
       img.style.height = '100%';
       img.style.objectFit = 'cover';
       img.style.borderRadius = '10px';
-      
+
       const overlay = document.createElement('div');
       overlay.className = 'photo-overlay';
       overlay.innerHTML = `
@@ -108,9 +122,52 @@ export class TimelineChallengeGame extends BaseGame {
           <small>${this.formatDate(photo.date)}</small>
         </div>
       `;
-      
+
+      // Add fullscreen button
+      const fullscreenBtn = document.createElement('button');
+      fullscreenBtn.className = 'photo-fullscreen-btn';
+      fullscreenBtn.innerHTML = '🔍';
+      fullscreenBtn.title = 'View fullscreen';
+      fullscreenBtn.style.cssText = `
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: all 0.2s ease;
+      `;
+
+      fullscreenBtn.addEventListener('click', (e) =>
+      {
+        e.preventDefault();
+        e.stopPropagation();
+        this.openFullscreen(photo);
+      });
+
+      fullscreenBtn.addEventListener('mouseenter', () =>
+      {
+        fullscreenBtn.style.background = '#fff';
+        fullscreenBtn.style.transform = 'scale(1.1)';
+      });
+
+      fullscreenBtn.addEventListener('mouseleave', () =>
+      {
+        fullscreenBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+        fullscreenBtn.style.transform = 'scale(1)';
+      });
+
       photoElement.appendChild(img);
       photoElement.appendChild(overlay);
+      photoElement.appendChild(fullscreenBtn);
 
       // Add drag event listeners
       this.addDragListeners(photoElement);
@@ -119,13 +176,15 @@ export class TimelineChallengeGame extends BaseGame {
     });
   }
 
-  setupDropZone() {
+  setupDropZone()
+  {
     const dropZone = document.getElementById('timeline-dropzone');
     if (!dropZone) return;
 
     dropZone.innerHTML = '';
 
-    for (let i = 0; i < this.photosPerRound; i++) {
+    for (let i = 0; i < this.photosPerRound; i++)
+    {
       const slot = document.createElement('div');
       slot.className = 'drop-slot';
       slot.dataset.slotIndex = i;
@@ -138,36 +197,43 @@ export class TimelineChallengeGame extends BaseGame {
     }
   }
 
-  addDragListeners(element) {
-    element.addEventListener('dragstart', (e) => {
+  addDragListeners(element)
+  {
+    element.addEventListener('dragstart', (e) =>
+    {
       this.draggedElement = element;
       this.draggedFromDropzone = element.parentElement.id === 'timeline-dropzone';
       element.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
     });
 
-    element.addEventListener('dragend', (e) => {
+    element.addEventListener('dragend', (e) =>
+    {
       element.classList.remove('dragging');
       this.draggedElement = null;
       this.draggedFromDropzone = false;
     });
   }
 
-  addDropListeners(slot) {
-    slot.addEventListener('dragover', (e) => {
+  addDropListeners(slot)
+  {
+    slot.addEventListener('dragover', (e) =>
+    {
       e.preventDefault();
       e.dataTransfer.dropEffect = 'move';
       slot.classList.add('drag-over');
     });
 
-    slot.addEventListener('dragleave', (e) => {
+    slot.addEventListener('dragleave', (e) =>
+    {
       slot.classList.remove('drag-over');
     });
 
-    slot.addEventListener('drop', (e) => {
+    slot.addEventListener('drop', (e) =>
+    {
       e.preventDefault();
       slot.classList.remove('drag-over');
-      
+
       if (!this.draggedElement) return;
 
       const slotIndex = parseInt(slot.dataset.slotIndex);
@@ -175,18 +241,22 @@ export class TimelineChallengeGame extends BaseGame {
 
       // Check if slot is already occupied
       const existingPhoto = slot.querySelector('.timeline-photo');
-      
-      if (existingPhoto) {
+
+      if (existingPhoto)
+      {
         // Swap positions if dragging from dropzone
-        if (this.draggedFromDropzone) {
+        if (this.draggedFromDropzone)
+        {
           const draggedSlot = this.draggedElement.parentElement;
           draggedSlot.appendChild(existingPhoto);
           this.updateUserOrder();
-        } else {
+        } else
+        {
           // Return dragged element to original position and don't allow drop
           return;
         }
-      } else if (this.draggedFromDropzone) {
+      } else if (this.draggedFromDropzone)
+      {
         // Moving within dropzone - update the empty slot text
         const draggedSlot = this.draggedElement.parentElement;
         draggedSlot.innerHTML = `<span>Drop here<br><small>Position ${parseInt(draggedSlot.dataset.slotIndex) + 1}</small></span>`;
@@ -196,62 +266,80 @@ export class TimelineChallengeGame extends BaseGame {
       // Place the dragged photo in the slot
       slot.innerHTML = '';
       slot.appendChild(this.draggedElement);
-      
+
+      // Ensure fullscreen button still works after moving
+      this.ensureFullscreenButton(this.draggedElement);
+
       this.updateUserOrder();
       this.checkIfComplete();
     });
   }
 
-  updateUserOrder() {
+  updateUserOrder()
+  {
     this.userOrder = [];
     const dropSlots = document.querySelectorAll('.drop-slot');
-    
-    dropSlots.forEach(slot => {
+
+    dropSlots.forEach(slot =>
+    {
       const photo = slot.querySelector('.timeline-photo');
-      if (photo) {
+      if (photo)
+      {
         const photoId = parseInt(photo.dataset.photoId);
         this.userOrder.push(this.selectedPhotos[photoId]);
-      } else {
+      } else
+      {
         this.userOrder.push(null);
       }
     });
   }
 
-  checkIfComplete() {
+  checkIfComplete()
+  {
     // Check if all slots are filled
     const filledSlots = this.userOrder.filter(photo => photo !== null);
-    
-    if (filledSlots.length === this.photosPerRound) {
+
+    if (filledSlots.length === this.photosPerRound)
+    {
       // All slots filled, check the order
       setTimeout(() => this.evaluateOrder(), 500);
     }
   }
 
-  evaluateOrder() {
-    const isCorrect = this.userOrder.every((photo, index) => {
+  evaluateOrder()
+  {
+    const isCorrect = this.userOrder.every((photo, index) =>
+    {
       return photo && photo.src === this.correctOrder[index].src;
     });
 
-    if (isCorrect) {
+    if (isCorrect)
+    {
       this.correctRounds++;
       this.showRoundResult(true);
-    } else {
+    } else
+    {
       this.showRoundResult(false);
     }
   }
 
-  showRoundResult(isCorrect) {
+  showRoundResult(isCorrect)
+  {
     // Visual feedback for all photos
     const dropSlots = document.querySelectorAll('.drop-slot');
-    dropSlots.forEach((slot, index) => {
+    dropSlots.forEach((slot, index) =>
+    {
       const photo = slot.querySelector('.timeline-photo');
-      if (photo) {
+      if (photo)
+      {
         const correctPhoto = this.correctOrder[index];
         const userPhoto = this.userOrder[index];
-        
-        if (userPhoto && userPhoto.src === correctPhoto.src) {
+
+        if (userPhoto && userPhoto.src === correctPhoto.src)
+        {
           slot.classList.add('correct-position');
-        } else {
+        } else
+        {
           slot.classList.add('incorrect-position');
         }
       }
@@ -262,28 +350,32 @@ export class TimelineChallengeGame extends BaseGame {
     this.showRoundExplanation(isCorrect, explanation);
 
     // Move to next round after delay
-    setTimeout(() => {
+    setTimeout(() =>
+    {
       this.currentRound++;
       this.setupRound();
     }, 4000);
   }
 
-  createOrderExplanation() {
+  createOrderExplanation()
+  {
     let explanation = "The correct chronological order:\n\n";
-    
-    this.correctOrder.forEach((photo, index) => {
+
+    this.correctOrder.forEach((photo, index) =>
+    {
       const date = new Date(photo.date);
-      explanation += `${index + 1}. ${photo.moment} (${date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
+      explanation += `${index + 1}. ${photo.moment} (${date.toLocaleDateString('en-US', {
+        year: 'numeric',
         month: 'long',
         day: 'numeric'
       })})\n`;
     });
-    
+
     return explanation;
   }
 
-  showRoundExplanation(isCorrect, explanation) {
+  showRoundExplanation(isCorrect, explanation)
+  {
     const explanationDiv = document.createElement('div');
     explanationDiv.className = 'timeline-explanation';
     explanationDiv.innerHTML = `
@@ -293,35 +385,43 @@ export class TimelineChallengeGame extends BaseGame {
         <p><em>${isCorrect ? 'You really know our story! 💕' : 'Every moment is precious in our timeline! ✨'}</em></p>
       </div>
     `;
-    
+
     const timelineContent = document.getElementById('timeline-content');
-    if (timelineContent) {
+    if (timelineContent)
+    {
       timelineContent.appendChild(explanationDiv);
-      
+
       // Remove after next round starts
-      setTimeout(() => {
-        if (explanationDiv.parentElement) {
+      setTimeout(() =>
+      {
+        if (explanationDiv.parentElement)
+        {
           explanationDiv.remove();
         }
       }, 4500);
     }
   }
 
-  showFinalResults() {
+  showFinalResults()
+  {
     const percentage = Math.round((this.correctRounds / this.totalRounds) * 100);
     let resultMessage = '';
     let resultEmoji = '';
-    
-    if (percentage >= 100) {
+
+    if (percentage >= 100)
+    {
       resultMessage = "Perfect! You have our timeline memorized! 💕";
       resultEmoji = "🏆";
-    } else if (percentage >= 67) {
+    } else if (percentage >= 67)
+    {
       resultMessage = "Excellent! You know our story really well! 😍";
       resultEmoji = "🥇";
-    } else if (percentage >= 34) {
+    } else if (percentage >= 34)
+    {
       resultMessage = "Good effort! Our timeline has many precious moments! 😊";
       resultEmoji = "🥈";
-    } else {
+    } else
+    {
       resultMessage = "Every moment in our timeline is special - keep exploring! 💫";
       resultEmoji = "📅";
     }
@@ -335,9 +435,11 @@ export class TimelineChallengeGame extends BaseGame {
     this.gameEngine.completeGame('timeline');
   }
 
-  updateProgress() {
+  updateProgress()
+  {
     const gameStats = document.querySelector('#timeline-screen .game-stats');
-    if (gameStats) {
+    if (gameStats)
+    {
       gameStats.innerHTML = `
         <div>Round: <strong>${this.currentRound}/${this.totalRounds}</strong></div>
         <div>Correct: <strong>${this.correctRounds}/${this.currentRound - 1}</strong></div>
@@ -345,25 +447,180 @@ export class TimelineChallengeGame extends BaseGame {
     }
   }
 
-  formatDate(dateString) {
+  formatDate(dateString)
+  {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
       month: 'short'
     });
   }
 
-  shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+  shuffleArray(array)
+  {
+    for (let i = array.length - 1; i > 0; i--)
+    {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
 
-  reset() {
+  createFullscreenModal()
+  {
+    // Remove existing modal if it exists
+    const existingModal = document.getElementById('photo-fullscreen-modal');
+    if (existingModal)
+    {
+      existingModal.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'photo-fullscreen-modal';
+    modal.className = 'photo-fullscreen-modal';
+    modal.innerHTML = `
+      <div class="photo-fullscreen-content">
+        <button class="photo-fullscreen-close" aria-label="Close fullscreen">&times;</button>
+        <img class="photo-fullscreen-image" alt="Photo in fullscreen">
+        <div class="photo-fullscreen-info">
+          <h3 class="photo-fullscreen-title"></h3>
+          <p class="photo-fullscreen-date"></p>
+        </div>
+        <div class="photo-fullscreen-instruction">Click outside or press ESC to close</div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Add event listeners
+    const closeBtn = modal.querySelector('.photo-fullscreen-close');
+    const modalContent = modal.querySelector('.photo-fullscreen-content');
+
+    closeBtn.addEventListener('click', () => this.closeFullscreen());
+
+    modal.addEventListener('click', (e) =>
+    {
+      if (e.target === modal)
+      {
+        this.closeFullscreen();
+      }
+    });
+
+    // Store the keydown handler so we can remove it later if needed
+    this.escKeyHandler = (e) =>
+    {
+      if (e.key === 'Escape' && modal.classList.contains('active'))
+      {
+        e.preventDefault();
+        e.stopPropagation();
+        this.closeFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', this.escKeyHandler);
+  }
+
+  openFullscreen(photo)
+  {
+    const modal = document.getElementById('photo-fullscreen-modal');
+    if (!modal) return;
+
+    const img = modal.querySelector('.photo-fullscreen-image');
+    const title = modal.querySelector('.photo-fullscreen-title');
+    const date = modal.querySelector('.photo-fullscreen-date');
+
+    img.src = photo.src;
+    img.alt = photo.moment || 'Memory';
+    title.textContent = photo.moment || 'Our Memory';
+
+    const formattedDate = new Date(photo.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    date.textContent = formattedDate;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeFullscreen()
+  {
+    const modal = document.getElementById('photo-fullscreen-modal');
+    if (!modal) return;
+
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  ensureFullscreenButton(photoElement)
+  {
+    // Check if fullscreen button already exists
+    let fullscreenBtn = photoElement.querySelector('.photo-fullscreen-btn');
+    if (fullscreenBtn) return;
+
+    // Get the photo data
+    const photoId = parseInt(photoElement.dataset.photoId);
+    const photo = this.selectedPhotos[photoId];
+    if (!photo) return;
+
+    // Create new fullscreen button
+    fullscreenBtn = document.createElement('button');
+    fullscreenBtn.className = 'photo-fullscreen-btn';
+    fullscreenBtn.innerHTML = '🔍';
+    fullscreenBtn.title = 'View fullscreen';
+    fullscreenBtn.style.cssText = `
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.2s ease;
+    `;
+
+    fullscreenBtn.addEventListener('click', (e) =>
+    {
+      e.preventDefault();
+      e.stopPropagation();
+      this.openFullscreen(photo);
+    });
+
+    fullscreenBtn.addEventListener('mouseenter', () =>
+    {
+      fullscreenBtn.style.background = '#fff';
+      fullscreenBtn.style.transform = 'scale(1.1)';
+    });
+
+    fullscreenBtn.addEventListener('mouseleave', () =>
+    {
+      fullscreenBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+      fullscreenBtn.style.transform = 'scale(1)';
+    });
+
+    photoElement.appendChild(fullscreenBtn);
+  }
+
+  reset()
+  {
     this.currentRound = 1;
     this.correctRounds = 0;
     this.userOrder = [];
+    this.closeFullscreen();
+
+    // Clean up event listener
+    if (this.escKeyHandler)
+    {
+      document.removeEventListener('keydown', this.escKeyHandler);
+    }
+
     this.setupRound();
   }
 }
