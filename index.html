@@ -9,6 +9,9 @@
 </head>
 <body>
     <div id="game-container">
+        <!-- Breadcrumbs Navigation -->
+        <nav id="breadcrumbs" class="hidden"></nav>
+        
         <!-- Loading Screen -->
         <div id="loading-screen" class="screen active">
             <div class="hearts-animation">
@@ -269,6 +272,13 @@
         </audio>
     </div>
 
-    <script src="game.js"></script>
+    <script type="module">
+        import { RomanticGameEngine } from './src/main.js';
+        
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new RomanticGameEngine();
+        });
+    </script>
 </body>
 </html>
