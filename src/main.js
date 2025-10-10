@@ -4,6 +4,7 @@ import { Router } from './utils/router.js';
 import { NavigationHelpers } from './utils/navigation.js';
 import { photos, memoryTokenMessages, triviaQuestions } from './data/gameData.js';
 import { MemoryMatchGame } from './components/MemoryMatchGame.js';
+import { PhotoPuzzleGame } from './components/PhotoPuzzleGame.js';
 
 export class RomanticGameEngine {
   constructor() {
@@ -17,6 +18,7 @@ export class RomanticGameEngine {
     
     // Initialize game components
     this.memoryMatchGame = new MemoryMatchGame(this);
+    this.photoPuzzleGame = new PhotoPuzzleGame(this);
     
     this.init();
   }
@@ -206,9 +208,9 @@ export class RomanticGameEngine {
     this.stopSlideshow();
   }
 
-  // Placeholder methods for other games (to be implemented)
+  // Game implementations
   startPhotoPuzzle() {
-    console.log('Photo Puzzle game - to be implemented');
+    this.photoPuzzleGame.start();
   }
 
   startGuessTheMoment() {

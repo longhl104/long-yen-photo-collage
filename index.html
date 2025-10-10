@@ -116,11 +116,12 @@
         </div>
 
         <!-- Photo Puzzle Game -->
-        <div id="photo-puzzle-game" class="screen game-screen">
+        <div id="photo-puzzle-screen" class="screen game-screen">
             <div class="game-header">
                 <h2>Photo Puzzle - Piece Together Our Memory</h2>
                 <div class="game-stats">
-                    <span>Moves: <span id="puzzle-moves">0</span></span>
+                    <span>Moves: <strong>0</strong></span>
+                    <span>Photo: <strong>Loading...</strong></span>
                 </div>
             </div>
             <div id="puzzle-container">
@@ -128,6 +129,8 @@
                 <div id="puzzle-reference">
                     <img id="reference-image" alt="Reference">
                     <p>Reference Image</p>
+                    <button id="new-puzzle-btn" class="btn-primary">New Puzzle</button>
+                    <button id="puzzle-hint-btn" class="btn-secondary">Show Hint</button>
                 </div>
             </div>
             <button id="puzzle-back-btn" class="btn-secondary">Back to Games</button>
