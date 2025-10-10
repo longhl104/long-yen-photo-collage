@@ -23,13 +23,64 @@ export class PhotoPuzzleGame extends BaseGame {
     this.currentPhotoIndex = Math.floor(Math.random() * this.gameEngine.photos.length);
     const selectedPhoto = this.gameEngine.photos[this.currentPhotoIndex];
 
-    // Update the reference image
+    // Update the reference image and wait for it to load to get dimensions
     const referenceImg = document.getElementById('reference-image');
     if (referenceImg) {
       referenceImg.src = selectedPhoto.src;
       referenceImg.alt = selectedPhoto.moment || 'Puzzle Reference';
+      
+      // Wait for image to load to get its dimensions
+      referenceImg.onload = () => {
+        this.adjustPuzzleSize(referenceImg.naturalWidth, referenceImg.naturalHeight);
+        this.initializePuzzle();
+      };
+      
+      // If image is already cached and loaded
+      if (referenceImg.complete) {
+        this.adjustPuzzleSize(referenceImg.naturalWidth, referenceImg.naturalHeight);
+        this.initializePuzzle();
+      }
+    } else {
+      // Fallback if no reference image
+      this.initializePuzzle();
+    }
+  }
+
+  adjustPuzzleSize(imageWidth, imageHeight) {
+    const puzzleGrid = document.getElementById('puzzle-grid');
+    if (!puzzleGrid) return;
+
+    // Calculate aspect ratio
+    const aspectRatio = imageWidth / imageHeight;
+    
+    // Base size for the puzzle (can be adjusted)
+    let baseSize = 400;
+    
+    // Check screen size and adjust base size for mobile
+    if (window.innerWidth < 480) {
+      baseSize = 280;
+    } else if (window.innerWidth < 768) {
+      baseSize = 320;
     }
 
+    let puzzleWidth, puzzleHeight;
+
+    if (aspectRatio > 1) {
+      // Landscape image
+      puzzleWidth = baseSize;
+      puzzleHeight = baseSize / aspectRatio;
+    } else {
+      // Portrait or square image  
+      puzzleHeight = baseSize;
+      puzzleWidth = baseSize * aspectRatio;
+    }
+
+    // Apply the calculated dimensions
+    puzzleGrid.style.width = `${puzzleWidth}px`;
+    puzzleGrid.style.height = `${puzzleHeight}px`;
+  }
+
+  initializePuzzle() {
     // Initialize tiles array (0-8, where 8 is the empty space)
     this.tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
     this.emptyTileIndex = 8;
