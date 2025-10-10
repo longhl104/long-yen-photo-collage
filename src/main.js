@@ -6,6 +6,7 @@ import { photos, memoryTokenMessages, triviaQuestions } from './data/gameData.js
 import { MemoryMatchGame } from './components/MemoryMatchGame.js';
 import { PhotoPuzzleGame } from './components/PhotoPuzzleGame.js';
 import { GuessTheMomentGame } from './components/GuessTheMomentGame.js';
+import { TriviaQuizGame } from './components/TriviaQuizGame.js';
 
 export class RomanticGameEngine
 {
@@ -26,6 +27,7 @@ export class RomanticGameEngine
     this.memoryMatchGame = new MemoryMatchGame(this);
     this.photoPuzzleGame = new PhotoPuzzleGame(this);
     this.guessTheMomentGame = new GuessTheMomentGame(this);
+    this.triviaQuizGame = new TriviaQuizGame(this);
 
     this.init();
   }
@@ -310,7 +312,7 @@ export class RomanticGameEngine
 
   startTriviaQuiz()
   {
-    console.log('Trivia Quiz game - to be implemented');
+    this.triviaQuizGame.start();
   }
 
   startTimeline()

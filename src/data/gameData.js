@@ -70,31 +70,54 @@ export const memoryTokenMessages = [
   "Happy International Women's Day to the most amazing woman in my life! 🌸"
 ];
 
-// Trivia questions
+// Trivia questions about your relationship
 export const triviaQuestions = [
   {
-    question: "Where did we go on our first official date?",
-    options: ["Coffee shop", "Restaurant", "Park", "Movies"],
-    correct: 0
+    question: "In which year did our beautiful love story begin?",
+    options: ["2017", "2018", "2019", "2020"],
+    correct: 1,
+    explanation: "Our amazing journey started in 2018 - what a perfect year to fall in love! 💕"
   },
   {
-    question: "What's my favorite thing about you?",
-    options: ["Your smile", "Your laugh", "Your kindness", "Everything!"],
-    correct: 3
+    question: "How many years have we been creating memories together?",
+    options: ["5 years", "6 years", "7 years", "8 years"],
+    correct: 2,
+    explanation: "We've been making beautiful memories for 7 incredible years! Time flies when you're in love! ✨"
   },
   {
-    question: "What was the first movie we watched together?",
-    options: ["Romantic Comedy", "Action Movie", "Horror Film", "Disney Movie"],
-    correct: 0
+    question: "What season did we have our first photos together?",
+    options: ["Spring", "Summer", "Fall", "Winter"],
+    correct: 2,
+    explanation: "Fall 2018 - the season when our love story began to bloom! 🍂❤️"
   },
   {
-    question: "What's our song?",
-    options: ["Love Story", "Perfect", "All of Me", "A Thousand Years"],
-    correct: 1
+    question: "Which year had the most special moments for us?",
+    options: ["2019", "2020", "2021", "2022"],
+    correct: 1,
+    explanation: "2020 was incredible - despite everything, we grew closer and made so many memories! 💫"
   },
   {
-    question: "What do I love most about our relationship?",
-    options: ["We never fight", "We laugh together", "We grow together", "All of the above"],
-    correct: 3
+    question: "What's the most common emotion in our photos?",
+    options: ["Happy", "Romantic", "Peaceful", "Excited"],
+    correct: 0,
+    explanation: "Happiness radiates from almost every photo - you bring so much joy to my life! 😊💕"
+  },
+  {
+    question: "How many photos do we have in our love story collection?",
+    options: ["25-30", "30-35", "35-40", "40+"],
+    correct: 3,
+    explanation: "We have over 40 beautiful photos capturing our journey - each one tells our story! 📸💖"
+  },
+  {
+    question: "What makes our relationship special?",
+    options: ["We never argue", "We laugh together", "We grow together", "All of the above"],
+    correct: 3,
+    explanation: "Everything! But especially how we laugh, grow, and support each other through it all! 🥰"
+  },
+  {
+    question: "Which moment best describes our relationship?",
+    options: ["First Messages", "Beach Day", "Holiday Magic", "Every moment"],
+    correct: 3,
+    explanation: "Every single moment has been special - from nervous first messages to magical holidays! 💝"
   }
 ];

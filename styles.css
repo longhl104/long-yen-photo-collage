@@ -555,6 +555,71 @@ h2 {
 	color: white;
 }
 
+.trivia-option.correct {
+	background: #28a745;
+	color: white;
+	border-color: #28a745;
+}
+
+.trivia-option.incorrect {
+	background: #dc3545;
+	color: white;
+	border-color: #dc3545;
+}
+
+.trivia-option:disabled {
+	cursor: not-allowed;
+}
+
+.trivia-option:disabled:hover {
+	background: initial;
+	color: initial;
+}
+
+.trivia-option.correct:disabled:hover {
+	background: #28a745;
+	color: white;
+}
+
+.trivia-option.incorrect:disabled:hover {
+	background: #dc3545;
+	color: white;
+}
+
+/* Trivia Explanation */
+.trivia-explanation {
+	margin-top: 20px;
+	padding: 20px;
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 15px;
+	border-left: 5px solid #17a2b8;
+	animation: slideIn 0.4s ease-out;
+}
+
+.trivia-explanation .explanation-content h4 {
+	margin-bottom: 10px;
+	font-size: 1.2em;
+	color: #17a2b8;
+}
+
+.trivia-explanation .explanation-content p {
+	margin: 0;
+	color: #6c757d;
+	line-height: 1.5;
+}
+
+#trivia-question h3 {
+	color: #ff69b4;
+	margin-bottom: 15px;
+	font-size: 1.1em;
+	font-weight: 600;
+}
+
+#trivia-question p {
+	margin: 0;
+	color: #333;
+}
+
 /* Timeline Game */
 #timeline-content {
 	max-width: 1000px;
