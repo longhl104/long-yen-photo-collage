@@ -1,289 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love Story Game 💕</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div id="game-container">
-        <!-- Breadcrumbs Navigation -->
-        <nav id="breadcrumbs" class="hidden"></nav>
-        
-        <!-- Loading Screen -->
-        <div id="loading-screen" class="screen active">
-            <div class="hearts-animation">
-                <div class="heart">💕</div>
-                <div class="heart">❤️</div>
-                <div class="heart">💖</div>
-            </div>
-            <h1>Loading Our Love Story...</h1>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
-            </div>
-        </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Our Love Story Game 💕</title>
+		<link rel="stylesheet" href="styles.css" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<div id="game-container">
+			<!-- Breadcrumbs Navigation -->
+			<nav id="breadcrumbs" class="hidden"></nav>
 
-        <!-- Welcome Screen -->
-        <div id="welcome-screen" class="screen">
-            <div class="welcome-content">
-                <h1 class="title">Our Love Story Game</h1>
-                <p class="subtitle">A Journey Through Our Beautiful Memories</p>
-                <div class="love-meter-container">
-                    <div class="love-meter">
-                        <div class="love-level" id="love-level"></div>
-                        <span class="love-text">Love Level: <span id="love-percentage">0</span>%</span>
-                    </div>
-                </div>
-                <button id="start-game-btn" class="btn-primary">Start Our Adventure 💕</button>
-                <div class="memory-tokens">
-                    <span>Memory Tokens Collected: <span id="token-count">0</span>/8</span>
-                    <div style="margin-top: 10px; font-size: 0.9em; color: #999;">
-                        <span>41 Photos • 7+ Years of Memories • Our Love Story</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<!-- Loading Screen -->
+			<div id="loading-screen" class="screen active">
+				<div class="hearts-animation">
+					<div class="heart">💕</div>
+					<div class="heart">❤️</div>
+					<div class="heart">💖</div>
+				</div>
+				<h1>Loading Our Love Story...</h1>
+				<div class="loading-bar">
+					<div class="loading-progress"></div>
+				</div>
+			</div>
 
-        <!-- Game Selection Screen -->
-        <div id="game-selection" class="screen">
-            <h2>Choose Your Memory Game</h2>
-            <div class="games-grid">
-                <div class="game-card" data-game="memory-match">
-                    <div class="game-icon">🧠</div>
-                    <h3>Memory Match</h3>
-                    <p>Find matching moments of our love</p>
-                    <div class="game-status unlocked">Unlocked</div>
-                </div>
-                <div class="game-card" data-game="photo-puzzle">
-                    <div class="game-icon">🧩</div>
-                    <h3>Photo Puzzle</h3>
-                    <p>Piece together our memories</p>
-                    <div class="game-status locked">Complete Memory Match</div>
-                </div>
-                <div class="game-card" data-game="guess-moment">
-                    <div class="game-icon">📷</div>
-                    <h3>Guess the Moment</h3>
-                    <p>Remember when this happened?</p>
-                    <div class="game-status locked">Complete Photo Puzzle</div>
-                </div>
-                <div class="game-card" data-game="trivia-quiz">
-                    <div class="game-icon">❓</div>
-                    <h3>Our Story Quiz</h3>
-                    <p>Test your memory of our journey</p>
-                    <div class="game-status locked">Complete Guess the Moment</div>
-                </div>
-                <div class="game-card" data-game="timeline">
-                    <div class="game-icon">📅</div>
-                    <h3>Timeline Challenge</h3>
-                    <p>Put our memories in order</p>
-                    <div class="game-status locked">Complete Our Story Quiz</div>
-                </div>
-                <div class="game-card" data-game="mood-match">
-                    <div class="game-icon">😍</div>
-                    <h3>Mood Match</h3>
-                    <p>Match photos with feelings</p>
-                    <div class="game-status locked">Complete Timeline Challenge</div>
-                </div>
-                <div class="game-card" data-game="hidden-message">
-                    <div class="game-icon">🔍</div>
-                    <h3>Hidden Messages</h3>
-                    <p>Find secret notes in our photos</p>
-                    <div class="game-status locked">Complete Mood Match</div>
-                </div>
-                <div class="game-card" data-game="scavenger-hunt">
-                    <div class="game-icon">🎯</div>
-                    <h3>Photo Scavenger Hunt</h3>
-                    <p>Find specific details in memories</p>
-                    <div class="game-status locked">Complete Hidden Messages</div>
-                </div>
-            </div>
-            <button id="final-slideshow-btn" class="btn-primary hidden">View Our Love Story 💕</button>
-        </div>
+			<!-- Welcome Screen -->
+			<div id="welcome-screen" class="screen">
+				<div class="welcome-content">
+					<h1 class="title">Our Love Story Game</h1>
+					<p class="subtitle">A Journey Through Our Beautiful Memories</p>
+					<div class="love-meter-container">
+						<div class="love-meter">
+							<div class="love-level" id="love-level"></div>
+							<span class="love-text"
+								>Love Level: <span id="love-percentage">0</span>%</span
+							>
+						</div>
+					</div>
+					<button id="start-game-btn" class="btn-primary">
+						Start Our Adventure 💕
+					</button>
+					<div class="memory-tokens">
+						<span
+							>Memory Tokens Collected: <span id="token-count">0</span>/8</span
+						>
+						<div style="margin-top: 10px; font-size: 0.9em; color: #999">
+							<span>41 Photos • 7+ Years of Memories • Our Love Story</span>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        <!-- Memory Match Game -->
-        <div id="memory-match-game" class="screen game-screen">
-            <div class="game-header">
-                <h2>Memory Match - Find Our Matching Moments</h2>
-                <div class="game-stats">
-                    <span>Matches: <span id="matches-count">0</span>/6</span>
-                    <span>Moves: <span id="moves-count">0</span></span>
-                </div>
-            </div>
-            <div id="memory-grid" class="memory-grid"></div>
-            <button id="memory-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Game Selection Screen -->
+			<div id="game-selection" class="screen">
+				<h2>Choose Your Memory Game</h2>
+				<div class="games-grid">
+					<div class="game-card" data-game="memory-match">
+						<div class="game-icon">🧠</div>
+						<h3>Memory Match</h3>
+						<p>Find matching moments of our love</p>
+						<div class="game-status unlocked">Unlocked</div>
+					</div>
+					<div class="game-card" data-game="photo-puzzle">
+						<div class="game-icon">🧩</div>
+						<h3>Photo Puzzle</h3>
+						<p>Piece together our memories</p>
+						<div class="game-status locked">Complete Memory Match</div>
+					</div>
+					<div class="game-card" data-game="guess-moment">
+						<div class="game-icon">📷</div>
+						<h3>Guess the Moment</h3>
+						<p>Remember when this happened?</p>
+						<div class="game-status locked">Complete Photo Puzzle</div>
+					</div>
+					<div class="game-card" data-game="trivia-quiz">
+						<div class="game-icon">❓</div>
+						<h3>Our Story Quiz</h3>
+						<p>Test your memory of our journey</p>
+						<div class="game-status locked">Complete Guess the Moment</div>
+					</div>
+					<div class="game-card" data-game="timeline">
+						<div class="game-icon">📅</div>
+						<h3>Timeline Challenge</h3>
+						<p>Put our memories in order</p>
+						<div class="game-status locked">Complete Our Story Quiz</div>
+					</div>
+					<div class="game-card" data-game="mood-match">
+						<div class="game-icon">😍</div>
+						<h3>Mood Match</h3>
+						<p>Match photos with feelings</p>
+						<div class="game-status locked">Complete Timeline Challenge</div>
+					</div>
+					<div class="game-card" data-game="hidden-message">
+						<div class="game-icon">🔍</div>
+						<h3>Hidden Messages</h3>
+						<p>Find secret notes in our photos</p>
+						<div class="game-status locked">Complete Mood Match</div>
+					</div>
+					<div class="game-card" data-game="scavenger-hunt">
+						<div class="game-icon">🎯</div>
+						<h3>Photo Scavenger Hunt</h3>
+						<p>Find specific details in memories</p>
+						<div class="game-status locked">Complete Hidden Messages</div>
+					</div>
+				</div>
+				<button id="final-slideshow-btn" class="btn-primary hidden">
+					View Our Love Story 💕
+				</button>
+			</div>
 
-        <!-- Photo Puzzle Game -->
-        <div id="photo-puzzle-screen" class="screen game-screen">
-            <div class="game-header">
-                <h2>Photo Puzzle - Piece Together Our Memory</h2>
-                <div class="game-stats">
-                    <span>Moves: <strong>0</strong></span>
-                    <span>Photo: <strong>Loading...</strong></span>
-                </div>
-            </div>
-            <div id="puzzle-container">
-                <div id="puzzle-grid"></div>
-                <div id="puzzle-reference">
-                    <img id="reference-image" alt="Reference">
-                    <p>Reference Image</p>
-                    <button id="new-puzzle-btn" class="btn-primary">New Puzzle</button>
-                    <button id="puzzle-hint-btn" class="btn-secondary">Show Hint</button>
-                </div>
-            </div>
-            <button id="puzzle-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Memory Match Game -->
+			<div id="memory-match-game" class="screen game-screen">
+				<div class="game-header">
+					<h2>Memory Match - Find Our Matching Moments</h2>
+					<div class="game-stats">
+						<span>Matches: <span id="matches-count">0</span>/6</span>
+						<span>Moves: <span id="moves-count">0</span></span>
+					</div>
+				</div>
+				<div id="memory-grid" class="memory-grid"></div>
+				<button id="memory-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Guess the Moment Game -->
-        <div id="guess-moment-screen" class="screen game-screen">
-            <div class="game-header">
-                <h2>Guess the Moment - When Did This Happen?</h2>
-                <div class="game-stats">
-                    <span>Question: <strong>1/5</strong></span>
-                    <span>Score: <strong>0/0</strong></span>
-                </div>
-            </div>
-            <div id="guess-content">
-                <div id="guess-photo-container">
-                    <img id="guess-photo" alt="Guess this moment">
-                </div>
-                <div id="guess-options"></div>
-            </div>
-            <button id="guess-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Photo Puzzle Game -->
+			<div id="photo-puzzle-screen" class="screen game-screen">
+				<div class="game-header">
+					<h2>Photo Puzzle - Piece Together Our Memory</h2>
+					<div class="game-stats">
+						<span>Moves: <strong>0</strong></span>
+						<span>Photo: <strong>Loading...</strong></span>
+					</div>
+				</div>
+				<div id="puzzle-container">
+					<div id="puzzle-grid"></div>
+					<div id="puzzle-reference">
+						<img id="reference-image" alt="Reference" />
+						<p>Reference Image</p>
+						<button id="new-puzzle-btn" class="btn-primary">New Puzzle</button>
+						<button id="puzzle-hint-btn" class="btn-secondary">
+							Show Hint
+						</button>
+					</div>
+				</div>
+				<button id="puzzle-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Trivia Quiz Game -->
-        <div id="trivia-screen" class="screen game-screen">
-            <div class="game-header">
-                <h2>Our Story Quiz - How Well Do You Remember?</h2>
-                <div class="game-stats">
-                    <span>Question: <strong>1/8</strong></span>
-                    <span>Score: <strong>0/0</strong></span>
-                </div>
-            </div>
-            <div id="trivia-content">
-                <div id="trivia-question"></div>
-                <div id="trivia-options"></div>
-            </div>
-            <button id="trivia-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Guess the Moment Game -->
+			<div id="guess-moment-screen" class="screen game-screen">
+				<div class="game-header">
+					<h2>Guess the Moment - When Did This Happen?</h2>
+					<div class="game-stats">
+						<span>Question: <strong>1/5</strong></span>
+						<span>Score: <strong>0/0</strong></span>
+					</div>
+				</div>
+				<div id="guess-content">
+					<div id="guess-photo-container">
+						<img id="guess-photo" alt="Guess this moment" />
+					</div>
+					<div id="guess-options"></div>
+				</div>
+				<button id="guess-back-btn" class="btn-secondary">Back to Games</button>
+			</div>
 
-        <!-- Timeline Challenge Game -->
-        <div id="timeline-screen" class="screen game-screen">
-            <div class="game-header">
-                <h2>Timeline Challenge - Put Our Memories in Order</h2>
-                <div class="game-stats">
-                    <span>Round: <strong>1/3</strong></span>
-                    <span>Correct: <strong>0/0</strong></span>
-                </div>
-            </div>
-            <div id="timeline-content">
-                <div id="timeline-photos"></div>
-                <div id="timeline-dropzone"></div>
-            </div>
-            <button id="timeline-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Trivia Quiz Game -->
+			<div id="trivia-screen" class="screen game-screen">
+				<div class="game-header">
+					<h2>Our Story Quiz - How Well Do You Remember?</h2>
+					<div class="game-stats">
+						<span>Question: <strong>1/8</strong></span>
+						<span>Score: <strong>0/0</strong></span>
+					</div>
+				</div>
+				<div id="trivia-content">
+					<div id="trivia-question"></div>
+					<div id="trivia-options"></div>
+				</div>
+				<button id="trivia-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Mood Match Game -->
-        <div id="mood-match-game" class="screen game-screen">
-            <div class="game-header">
-                <h2>Mood Match - Match Photos with Feelings</h2>
-                <div class="game-stats">
-                    <span>Matches: <span id="mood-matches">0</span>/5</span>
-                </div>
-            </div>
-            <div id="mood-content">
-                <div id="mood-photos"></div>
-                <div id="mood-emotions"></div>
-            </div>
-            <button id="mood-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Timeline Challenge Game -->
+			<div id="timeline-screen" class="screen game-screen">
+				<div class="game-header">
+					<h2>Timeline Challenge - Put Our Memories in Order</h2>
+					<div class="game-stats">
+						<span>Round: <strong>1/3</strong></span>
+						<span>Correct: <strong>0/0</strong></span>
+					</div>
+				</div>
+				<div id="timeline-content">
+					<div id="timeline-photos"></div>
+					<div id="timeline-dropzone"></div>
+				</div>
+				<button id="timeline-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Hidden Message Game -->
-        <div id="hidden-message-game" class="screen game-screen">
-            <div class="game-header">
-                <h2>Hidden Messages - Find Secret Notes</h2>
-                <div class="game-stats">
-                    <span>Messages Found: <span id="messages-found">0</span>/5</span>
-                </div>
-            </div>
-            <div id="hidden-content">
-                <div id="hidden-photo-container">
-                    <img id="hidden-photo" alt="Find the hidden message">
-                    <div id="hidden-messages"></div>
-                </div>
-            </div>
-            <button id="hidden-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Mood Match Game -->
+			<div id="mood-match-game" class="screen game-screen">
+				<div class="game-header">
+					<h2>Mood Match - Match Photos with Feelings</h2>
+					<div class="game-stats">
+						<span>Matches: <span id="mood-matches">0</span>/5</span>
+					</div>
+				</div>
+				<div id="mood-content">
+					<div id="mood-photos"></div>
+					<div id="mood-emotions"></div>
+				</div>
+				<button id="mood-back-btn" class="btn-secondary">Back to Games</button>
+			</div>
 
-        <!-- Scavenger Hunt Game -->
-        <div id="scavenger-game" class="screen game-screen">
-            <div class="game-header">
-                <h2>Photo Scavenger Hunt - Find the Details</h2>
-                <div class="game-stats">
-                    <span>Items Found: <span id="items-found">0</span>/5</span>
-                </div>
-            </div>
-            <div id="scavenger-content">
-                <div id="scavenger-task"></div>
-                <div id="scavenger-photo-container">
-                    <img id="scavenger-photo" alt="Find the item">
-                </div>
-            </div>
-            <button id="scavenger-back-btn" class="btn-secondary">Back to Games</button>
-        </div>
+			<!-- Hidden Message Game -->
+			<div id="hidden-message-game" class="screen game-screen">
+				<div class="game-header">
+					<h2>Hidden Messages - Find Secret Notes</h2>
+					<div class="game-stats">
+						<span>Messages Found: <span id="messages-found">0</span>/5</span>
+					</div>
+				</div>
+				<div id="hidden-content">
+					<div id="hidden-photo-container">
+						<img id="hidden-photo" alt="Find the hidden message" />
+						<div id="hidden-messages"></div>
+					</div>
+				</div>
+				<button id="hidden-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Final Slideshow -->
-        <div id="final-slideshow" class="screen">
-            <div class="slideshow-content">
-                <h2>Our Love Story - All Memories Unlocked 💕</h2>
-                <div id="slideshow-container">
-                    <div id="slideshow-photos"></div>
-                    <div id="slideshow-controls">
-                        <button id="prev-slide">❮</button>
-                        <button id="play-pause">⏸️</button>
-                        <button id="next-slide">❯</button>
-                    </div>
-                </div>
-                <div id="slideshow-message">
-                    <p>Congratulations on completing our love story game! 🎉</p>
-                    <p>Every memory token you collected represents a special moment in our journey together.</p>
-                    <p>Thank you for being the most amazing girlfriend. Happy International Women's Day! 💕</p>
-                </div>
-                <button id="restart-game-btn" class="btn-primary">Play Again</button>
-            </div>
-        </div>
+			<!-- Scavenger Hunt Game -->
+			<div id="scavenger-game" class="screen game-screen">
+				<div class="game-header">
+					<h2>Photo Scavenger Hunt - Find the Details</h2>
+					<div class="game-stats">
+						<span>Items Found: <span id="items-found">0</span>/5</span>
+					</div>
+				</div>
+				<div id="scavenger-content">
+					<div id="scavenger-task"></div>
+					<div id="scavenger-photo-container">
+						<img id="scavenger-photo" alt="Find the item" />
+					</div>
+				</div>
+				<button id="scavenger-back-btn" class="btn-secondary">
+					Back to Games
+				</button>
+			</div>
 
-        <!-- Memory Token Modal -->
-        <div id="token-modal" class="modal">
-            <div class="modal-content">
-                <h3>Memory Token Unlocked! 🎉</h3>
-                <div id="token-content"></div>
-                <button id="close-token-modal" class="btn-primary">Continue</button>
-            </div>
-        </div>
+			<!-- Final Slideshow -->
+			<div id="final-slideshow" class="screen">
+				<div class="slideshow-content">
+					<h2>Our Love Story - All Memories Unlocked 💕</h2>
+					<div id="slideshow-container">
+						<div id="slideshow-photos"></div>
+						<div id="slideshow-controls">
+							<button id="prev-slide">❮</button>
+							<button id="play-pause">⏸️</button>
+							<button id="next-slide">❯</button>
+						</div>
+					</div>
+					<div id="slideshow-message">
+						<p>Congratulations on completing our love story game! 🎉</p>
+						<p>
+							Every memory token you collected represents a special moment in
+							our journey together.
+						</p>
+						<p>
+							Thank you for being the most amazing girlfriend. Happy
+							International Women's Day! 💕
+						</p>
+					</div>
+					<button id="restart-game-btn" class="btn-primary">Play Again</button>
+				</div>
+			</div>
 
-        <!-- Audio Elements -->
-        <audio id="background-music" loop>
-            <source src="assets/audio/background-music.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="success-sound">
-            <source src="assets/audio/success.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="click-sound">
-            <source src="assets/audio/click.mp3" type="audio/mpeg">
-        </audio>
-    </div>
+			<!-- Memory Token Modal -->
+			<div id="token-modal" class="modal">
+				<div class="modal-content">
+					<h3>Memory Token Unlocked! 🎉</h3>
+					<div id="token-content"></div>
+					<button id="close-token-modal" class="btn-primary">Continue</button>
+				</div>
+			</div>
 
-    <script type="module">
-        import { RomanticGameEngine } from './src/main.js';
-        
-        // Initialize the game when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            new RomanticGameEngine();
-        });
-    </script>
-</body>
+			<!-- Audio Elements -->
+			<audio id="background-music" loop>
+				<source src="assets/audio/background-music.mp3" type="audio/mpeg" />
+			</audio>
+			<audio id="success-sound">
+				<source src="assets/audio/success.mp3" type="audio/mpeg" />
+			</audio>
+			<audio id="click-sound">
+				<source src="assets/audio/click.mp3" type="audio/mpeg" />
+			</audio>
+		</div>
+
+		<script type="module">
+			import { RomanticGameEngine } from "./src/main.js";
+
+			// Initialize the game when the page loads
+			document.addEventListener("DOMContentLoaded", () => {
+				new RomanticGameEngine();
+			});
+		</script>
+	</body>
 </html>

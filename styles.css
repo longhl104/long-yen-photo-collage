@@ -853,8 +853,9 @@ h2 {
 	display: flex;
 	gap: 40px;
 	justify-content: center;
-	max-width: 1000px;
+	max-width: 1200px;
 	margin: 0 auto;
+	padding: 20px;
 }
 
 #mood-photos,
@@ -865,34 +866,181 @@ h2 {
 	gap: 15px;
 }
 
-.mood-photo,
-.mood-emotion {
-	padding: 20px;
+.mood-photo {
+	position: relative;
+	padding: 15px;
 	background: white;
-	border-radius: 10px;
-	cursor: move;
+	border-radius: 15px;
+	cursor: pointer;
 	text-align: center;
-	border: 3px solid #ff69b4;
+	border: 3px solid #e0e0e0;
 	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .mood-photo img {
 	width: 100%;
 	height: 120px;
 	object-fit: cover;
-	border-radius: 5px;
+	border-radius: 10px;
+	margin-bottom: 10px;
+}
+
+.mood-photo-info {
+	font-size: 0.9em;
+	color: #666;
+}
+
+.mood-photo-info strong {
+	display: block;
+	color: #333;
+	margin-bottom: 2px;
 }
 
 .mood-emotion {
-	font-size: 1.5em;
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 20px;
+	background: white;
+	border-radius: 15px;
+	cursor: pointer;
+	border: 3px solid #e0e0e0;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.emotion-emoji {
+	width: 50px;
+	height: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.8em;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+.emotion-name {
+	font-size: 1.1em;
 	font-weight: 600;
-	color: #d63384;
+	color: #333;
 }
 
 .mood-photo:hover,
 .mood-emotion:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.mood-photo.selected,
+.mood-emotion.selected {
+	border-color: #ff69b4;
+	transform: translateY(-3px);
+	box-shadow: 0 8px 25px rgba(255, 105, 180, 0.3);
+}
+
+.mood-photo.matched,
+.mood-emotion.matched {
+	opacity: 0.7;
+	cursor: default;
+	transform: none;
+}
+
+.mood-photo.matched:hover,
+.mood-emotion.matched:hover {
+	transform: none;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.mood-message {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	margin-top: 15px;
+	padding: 10px 15px;
+	border-radius: 8px;
+	font-size: 0.9em;
+	text-align: center;
+	animation: slideDown 0.3s ease;
+}
+
+.mood-message.success {
+	background: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.mood-message.creative {
+	background: #fff3cd;
+	color: #856404;
+	border: 1px solid #ffeaa7;
+}
+
+.mood-message.info {
+	background: #d1ecf1;
+	color: #0c5460;
+	border: 1px solid #bee5eb;
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Completion Modal */
+.completion-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	z-index: 10000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: fadeIn 0.3s ease;
+}
+
+.completion-content {
+	background: white;
+	padding: 30px;
+	border-radius: 20px;
+	text-align: center;
+	max-width: 500px;
+	margin: 20px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.completion-content h3 {
+	color: #ff69b4;
+	margin-bottom: 20px;
+	font-size: 1.5em;
+}
+
+.completion-content p {
+	color: #666;
+	line-height: 1.6;
+	margin-bottom: 25px;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
 }
 
 /* Hidden Message Game */
@@ -1342,6 +1490,27 @@ h2 {
 
 	#mood-content {
 		flex-direction: column;
+		gap: 20px;
+		padding: 10px;
+	}
+
+	.mood-photo,
+	.mood-emotion {
+		padding: 12px;
+	}
+
+	.mood-photo img {
+		height: 100px;
+	}
+
+	.emotion-emoji {
+		width: 40px;
+		height: 40px;
+		font-size: 1.5em;
+	}
+
+	.emotion-name {
+		font-size: 1em;
 	}
 
 	#timeline-photos {

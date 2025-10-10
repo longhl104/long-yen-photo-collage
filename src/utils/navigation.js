@@ -135,7 +135,7 @@ export class NavigationHelpers
     if (hash && hash.startsWith('/games/'))
     {
       const gameType = hash.split('/')[2];
-      const validGames = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline', 'mood-match', 'hidden-message', 'scavenger-hunt'];
+      const validGames = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline', 'hidden-message', 'scavenger-hunt'];
 
       if (!validGames.includes(gameType))
       {
