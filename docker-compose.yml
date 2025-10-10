@@ -1,0 +1,16 @@
+services:
+  romantic-game:
+    build: .
+    container_name: romantic-love-game
+    ports:
+      - "80:80"
+    volumes:
+      - ./assets:/usr/share/nginx/html/assets
+    restart: unless-stopped
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.romantic-game.rule=Host(`localhost`)"
+      - "traefik.http.routers.romantic-game.entrypoints=web"
