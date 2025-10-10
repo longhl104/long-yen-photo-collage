@@ -9,6 +9,8 @@ import { GuessTheMomentGame } from './components/GuessTheMomentGame.js';
 import { TriviaQuizGame } from './components/TriviaQuizGame.js';
 import { TimelineChallengeGame } from './components/TimelineChallengeGame.js';
 import { MoodMatchGame } from './components/MoodMatchGame.js';
+import { HiddenMessageGame } from './components/HiddenMessageGame.js';
+import { PhotoScavengerHuntGame } from './components/PhotoScavengerHuntGame.js';
 
 export class RomanticGameEngine
 {
@@ -32,6 +34,8 @@ export class RomanticGameEngine
     this.triviaQuizGame = new TriviaQuizGame(this);
     this.timelineChallengeGame = new TimelineChallengeGame(this);
     this.moodMatchGame = new MoodMatchGame(this);
+    this.hiddenMessageGame = new HiddenMessageGame(this);
+    this.photoScavengerHuntGame = new PhotoScavengerHuntGame(this);
 
     this.init();
   }
@@ -174,7 +178,7 @@ export class RomanticGameEngine
 
   updateGameAvailability()
   {
-    const games = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline', 'mood-match', 'hidden-message', 'scavenger-hunt'];
+    const games = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline'];
 
     games.forEach((game, index) =>
     {
@@ -205,7 +209,7 @@ export class RomanticGameEngine
     });
 
     // Show final slideshow button if all games completed or in test mode
-    if (this.gameState.completedGames.length === 8 || this.testMode)
+    if (this.gameState.completedGames.length === 5 || this.testMode)
     {
       document.getElementById('final-slideshow-btn')?.classList.remove('hidden');
     }
@@ -213,7 +217,7 @@ export class RomanticGameEngine
 
   selectGame(gameType)
   {
-    const games = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline', 'mood-match', 'hidden-message', 'scavenger-hunt'];
+    const games = ['memory-match', 'photo-puzzle', 'guess-moment', 'trivia-quiz', 'timeline'];
     const gameIndex = games.indexOf(gameType);
 
     // Check if game is unlocked (allow access in test mode)
@@ -331,12 +335,18 @@ export class RomanticGameEngine
 
   startHiddenMessage()
   {
-    console.log('Hidden Message game - to be implemented');
+    if (this.hiddenMessageGame)
+    {
+      this.hiddenMessageGame.start();
+    }
   }
 
   startScavengerHunt()
   {
-    console.log('Scavenger Hunt game - to be implemented');
+    if (this.photoScavengerHuntGame)
+    {
+      this.photoScavengerHuntGame.start();
+    }
   }
 
   showFinalSlideshow()

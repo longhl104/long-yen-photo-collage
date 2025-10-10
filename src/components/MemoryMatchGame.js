@@ -2,22 +2,28 @@ import { BaseGame } from './BaseGame.js';
 import { GameUtils, DOMUtils } from '../utils/helpers.js';
 import { photos } from '../data/gameData.js';
 
-export class MemoryMatchGame extends BaseGame {
-  constructor(gameEngine) {
+export class MemoryMatchGame extends BaseGame
+{
+  constructor(gameEngine)
+  {
     super(gameEngine);
     this.memoryGame = null;
   }
 
-  start() {
+  start()
+  {
     this.showScreen('memory-match-game');
     this.init();
   }
 
-  init() {
+  init()
+  {
     const grid = document.getElementById('memory-grid');
-    const selectedPhotos = photos.slice(0, 6);
-    const gamePhotos = [...selectedPhotos, ...selectedPhotos];
-    GameUtils.shuffleArray(gamePhotos);
+    let shuffledPhotos = [...photos];
+    shuffledPhotos = GameUtils.shuffleArray(shuffledPhotos);
+    const selectedPhotos = shuffledPhotos.slice(0, 6);
+    let gamePhotos = [...selectedPhotos, ...selectedPhotos];
+    gamePhotos = GameUtils.shuffleArray(gamePhotos);
 
     this.memoryGame = {
       cards: [],
@@ -28,7 +34,8 @@ export class MemoryMatchGame extends BaseGame {
 
     grid.innerHTML = '';
 
-    gamePhotos.forEach((photo, index) => {
+    gamePhotos.forEach((photo, index) =>
+    {
       const card = this.createMemoryCard(photo, index);
       grid.appendChild(card);
       this.memoryGame.cards.push(card);
@@ -38,7 +45,8 @@ export class MemoryMatchGame extends BaseGame {
     this.updateElement('moves-count', 'textContent', '0');
   }
 
-  createMemoryCard(photo, index) {
+  createMemoryCard(photo, index)
+  {
     const card = DOMUtils.createElement('div', 'memory-card');
     card.dataset.photo = photo.src;
     card.innerHTML = `
@@ -54,32 +62,39 @@ export class MemoryMatchGame extends BaseGame {
     return card;
   }
 
-  flipCard(card, index) {
-    if (card.classList.contains('flipped') || this.memoryGame.flippedCards.length >= 2) {
+  flipCard(card, index)
+  {
+    if (card.classList.contains('flipped') || this.memoryGame.flippedCards.length >= 2)
+    {
       return;
     }
 
     card.classList.add('flipped');
     this.memoryGame.flippedCards.push({ card, index });
 
-    if (this.memoryGame.flippedCards.length === 2) {
+    if (this.memoryGame.flippedCards.length === 2)
+    {
       this.memoryGame.moves++;
       this.updateElement('moves-count', 'textContent', this.memoryGame.moves);
       setTimeout(() => this.checkMatch(), 1000);
     }
   }
 
-  checkMatch() {
+  checkMatch()
+  {
     const [card1, card2] = this.memoryGame.flippedCards;
 
-    if (card1.card.dataset.photo === card2.card.dataset.photo) {
+    if (card1.card.dataset.photo === card2.card.dataset.photo)
+    {
       this.memoryGame.matches++;
       this.updateElement('matches-count', 'textContent', this.memoryGame.matches);
 
-      if (this.memoryGame.matches === 6) {
+      if (this.memoryGame.matches === 6)
+      {
         setTimeout(() => this.completeGame('memory-match'), 500);
       }
-    } else {
+    } else
+    {
       card1.card.classList.remove('flipped');
       card2.card.classList.remove('flipped');
     }
