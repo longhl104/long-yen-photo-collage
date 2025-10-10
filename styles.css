@@ -1489,28 +1489,31 @@ h2 {
 	}
 
 	#mood-content {
-		flex-direction: column;
-		gap: 20px;
+		gap: 15px;
 		padding: 10px;
 	}
 
 	.mood-photo,
 	.mood-emotion {
-		padding: 12px;
+		padding: 10px;
 	}
 
 	.mood-photo img {
-		height: 100px;
+		height: 80px;
+	}
+
+	.mood-photo-info {
+		font-size: 0.8em;
 	}
 
 	.emotion-emoji {
-		width: 40px;
-		height: 40px;
-		font-size: 1.5em;
+		width: 35px;
+		height: 35px;
+		font-size: 1.3em;
 	}
 
 	.emotion-name {
-		font-size: 1em;
+		font-size: 0.9em;
 	}
 
 	#timeline-photos {
