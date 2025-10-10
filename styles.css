@@ -467,6 +467,57 @@ h2 {
 	border-color: #dc3545;
 }
 
+.guess-option:disabled {
+	cursor: not-allowed;
+}
+
+.guess-option:disabled:hover {
+	background: initial;
+	color: initial;
+}
+
+.guess-option.correct:disabled:hover {
+	background: #28a745;
+	color: white;
+}
+
+.guess-option.incorrect:disabled:hover {
+	background: #dc3545;
+	color: white;
+}
+
+/* Explanation */
+.explanation {
+	margin-top: 20px;
+	padding: 20px;
+	background: rgba(255, 255, 255, 0.95);
+	border-radius: 15px;
+	border-left: 5px solid #ff69b4;
+	animation: slideIn 0.4s ease-out;
+}
+
+.explanation-content h4 {
+	margin-bottom: 10px;
+	font-size: 1.2em;
+}
+
+.explanation-content p {
+	margin: 0;
+	color: #6c757d;
+	line-height: 1.5;
+}
+
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 /* Trivia Game */
 #trivia-content {
 	max-width: 800px;
