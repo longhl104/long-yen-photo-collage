@@ -708,6 +708,32 @@ export class TimelineChallengeGame extends BaseGame
     photoElement.appendChild(fullscreenBtn);
   }
 
+  showCompletionMessage(title, message)
+  {
+    // Create completion modal
+    const modal = document.createElement('div');
+    modal.className = 'completion-modal';
+    modal.innerHTML = `
+      <div class="completion-content">
+        <h3>${title}</h3>
+        <p style="white-space: pre-line;">${message}</p>
+        <button class="btn-primary" onclick="this.parentElement.parentElement.remove(); window.gameEngine.router.goToGames();">Continue</button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Auto-remove after delay
+    setTimeout(() =>
+    {
+      if (modal.parentElement)
+      {
+        modal.remove();
+        this.gameEngine.router.goToGames();
+      }
+    }, 8000);
+  }
+
   reset()
   {
     this.currentRound = 1;
