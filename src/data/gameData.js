@@ -49,13 +49,13 @@ export const photos = [
   { src: 'assets/photos/PXL_20250912_110349029.jpg', date: '2025-09-12', moment: 'Recent Memories', emotion: 'Cherished' },
 
   // Special moments (dates inferred from context)
-  { src: 'assets/photos/FACE_RC_1545220878374.jpg', date: '2018-12-19', moment: 'Thien Tan Palace Restaurant', emotion: 'Sweet' },
-  { src: 'assets/photos/FACE_SC_1548767691867.jpg', date: '2019-01-29', moment: 'Happy Faces', emotion: 'Playful' },
-  { src: 'assets/photos/FWP030814173_1327.jpg', date: '2020-08-03', moment: 'Featherdale Sydney Wildlife Park', emotion: 'Elegant' },
-  { src: 'assets/photos/Duv long50.JPG', date: '2021-06-15', moment: 'Cairn Adventure', emotion: 'Sophisticated' },
-  { src: 'assets/photos/HAVA0453 (1).jpg', date: '2022-03-20', moment: 'Professional Shot', emotion: 'Glamorous' },
-  { src: 'assets/photos/HAVA0536 (1).jpg', date: '2022-03-20', moment: 'Professional Shot', emotion: 'Radiant' },
-  { src: 'assets/photos/rtc-snapshot-852595009696049486.jpg', date: '2023-05-10', moment: 'Video Call', emotion: 'Connected' }
+  { src: 'assets/photos/FACE_RC_1545220878374.jpg', date: '2018-12-18', moment: 'Thien Tan Palace Restaurant', emotion: 'Sweet' },
+  { src: 'assets/photos/FACE_SC_1548767691867.jpg', date: '2019-01-28', moment: 'Happy Faces', emotion: 'Playful' },
+  { src: 'assets/photos/FWP030814173_1327.jpg', date: '2025-06-22', moment: 'Featherdale Sydney Wildlife Park', emotion: 'Elegant' },
+  { src: 'assets/photos/Duv long50.JPG', date: '2023-04-27', moment: 'Cairn Adventure', emotion: 'Sophisticated' },
+  { src: 'assets/photos/HAVA0453 (1).jpg', date: '2025-08-18', moment: 'Professional Shot', emotion: 'Glamorous' },
+  { src: 'assets/photos/HAVA0536 (1).jpg', date: '2025-08-18', moment: 'Professional Shot', emotion: 'Radiant' },
+  { src: 'assets/photos/rtc-snapshot-852595009696049486.jpg', date: '2018-07-18', moment: 'Video Call', emotion: 'Connected' }
 ];
 
 // Memory token messages

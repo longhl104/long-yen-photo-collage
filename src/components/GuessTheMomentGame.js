@@ -233,25 +233,29 @@ export class GuessTheMomentGame extends BaseGame {
 
   showFinalResults() {
     const percentage = Math.round((this.correctAnswers / this.totalQuestions) * 100);
+    const passed = this.correctAnswers >= 2; // Only need 2 points to pass
     let resultMessage = '';
     
-    if (percentage >= 80) {
+    if (this.correctAnswers >= 4) {
       resultMessage = "Amazing! You know our story so well! 💕";
-    } else if (percentage >= 60) {
+    } else if (this.correctAnswers >= 3) {
       resultMessage = "Great job! You remember many of our moments! 😊";
-    } else if (percentage >= 40) {
-      resultMessage = "Not bad! There's still more to discover about us! 💫";
+    } else if (this.correctAnswers >= 2) {
+      resultMessage = "Well done! You've unlocked the next memory game! 💫";
     } else {
-      resultMessage = "We have so many memories to share with you! 💝";
+      resultMessage = "Keep trying! You need at least 2 correct answers to continue. 💝";
     }
 
-    this.showCompletionMessage(
-      'Moment Guessing Complete! 📸',
-      `You got ${this.correctAnswers} out of ${this.totalQuestions} correct (${percentage}%). ${resultMessage}`
-    );
+    const title = passed ? 'Moment Guessing Complete! 📸' : 'Try Again! 🔄';
+    const message = `You got ${this.correctAnswers} out of ${this.totalQuestions} correct (${percentage}%). ${resultMessage}`;
 
-    // Complete the game
-    this.gameEngine.completeGame('guess-moment');
+    if (passed) {
+      this.showCompletionMessage(title, message);
+      // Complete the game only if passed
+      this.gameEngine.completeGame('guess-moment');
+    } else {
+      this.showCompletionMessage(title, message + '\n\nClick "Back to Games" to try again!');
+    }
   }
 
   updateProgress() {
@@ -269,6 +273,29 @@ export class GuessTheMomentGame extends BaseGame {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+  }
+
+  showCompletionMessage(title, message) {
+    // Create completion modal
+    const modal = document.createElement('div');
+    modal.className = 'completion-modal';
+    modal.innerHTML = `
+      <div class="completion-content">
+        <h3>${title}</h3>
+        <p style="white-space: pre-line;">${message}</p>
+        <button class="btn-primary" onclick="this.parentElement.parentElement.remove(); window.gameEngine.router.goToGames();">Continue</button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Auto-remove after delay
+    setTimeout(() => {
+      if (modal.parentElement) {
+        modal.remove();
+        this.gameEngine.router.goToGames();
+      }
+    }, 8000);
   }
 
   reset() {
