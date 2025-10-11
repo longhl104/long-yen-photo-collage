@@ -717,13 +717,16 @@ export class TimelineChallengeGame extends BaseGame
       <div class="completion-content">
         <h3>${title}</h3>
         <p style="white-space: pre-line;">${message}</p>
-        <button class="btn-primary" onclick="this.parentElement.parentElement.remove(); window.gameEngine.router.goToGames();">Continue</button>
+        <div class="completion-buttons">
+          <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove(); window.gameEngine.timelineChallengeGame.reset(); window.gameEngine.timelineChallengeGame.start();">New Game</button>
+          <button class="btn-primary" onclick="this.parentElement.parentElement.parentElement.remove(); window.gameEngine.router.goToGames();">Continue</button>
+        </div>
       </div>
     `;
 
     document.body.appendChild(modal);
 
-    // Auto-remove after delay
+    // Auto-remove after delay (increased to 12 seconds to give more time to see buttons)
     setTimeout(() =>
     {
       if (modal.parentElement)
@@ -731,7 +734,7 @@ export class TimelineChallengeGame extends BaseGame
         modal.remove();
         this.gameEngine.router.goToGames();
       }
-    }, 8000);
+    }, 12000);
   }
 
   reset()
@@ -739,6 +742,10 @@ export class TimelineChallengeGame extends BaseGame
     this.currentRound = 1;
     this.correctRounds = 0;
     this.userOrder = [];
+    this.selectedPhotos = [];
+    this.correctOrder = [];
+    this.draggedElement = null;
+    this.draggedFromDropzone = false;
     this.closeFullscreen();
 
     // Clean up event listener
@@ -746,6 +753,16 @@ export class TimelineChallengeGame extends BaseGame
     {
       document.removeEventListener('keydown', this.escKeyHandler);
     }
+
+    // Clear any existing visual feedback from previous game
+    document.querySelectorAll('.drop-slot').forEach(slot =>
+    {
+      slot.classList.remove('correct-position', 'incorrect-position', 'drag-over');
+    });
+
+    // Clear any existing round explanations
+    const explanations = document.querySelectorAll('.timeline-explanation');
+    explanations.forEach(explanation => explanation.remove());
 
     this.setupRound();
   }

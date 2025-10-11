@@ -1032,6 +1032,18 @@ h2 {
 	margin-bottom: 25px;
 }
 
+.completion-buttons {
+	display: flex;
+	gap: 15px;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.completion-buttons button {
+	min-width: 120px;
+}
+
 @keyframes fadeIn {
 	from {
 		opacity: 0;
