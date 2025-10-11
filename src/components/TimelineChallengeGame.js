@@ -199,6 +199,7 @@ export class TimelineChallengeGame extends BaseGame
 
   addDragListeners(element)
   {
+    // Desktop drag and drop
     element.addEventListener('dragstart', (e) =>
     {
       this.draggedElement = element;
@@ -212,6 +213,22 @@ export class TimelineChallengeGame extends BaseGame
       element.classList.remove('dragging');
       this.draggedElement = null;
       this.draggedFromDropzone = false;
+    });
+
+    // Mobile touch support
+    element.addEventListener('touchstart', (e) =>
+    {
+      this.touchStartHandler(e, element);
+    });
+
+    element.addEventListener('touchmove', (e) =>
+    {
+      this.touchMoveHandler(e, element);
+    });
+
+    element.addEventListener('touchend', (e) =>
+    {
+      this.touchEndHandler(e, element);
     });
   }
 
@@ -233,46 +250,50 @@ export class TimelineChallengeGame extends BaseGame
     {
       e.preventDefault();
       slot.classList.remove('drag-over');
-
-      if (!this.draggedElement) return;
-
-      const slotIndex = parseInt(slot.dataset.slotIndex);
-      const photoId = parseInt(this.draggedElement.dataset.photoId);
-
-      // Check if slot is already occupied
-      const existingPhoto = slot.querySelector('.timeline-photo');
-
-      if (existingPhoto)
-      {
-        // Swap positions if dragging from dropzone
-        if (this.draggedFromDropzone)
-        {
-          const draggedSlot = this.draggedElement.parentElement;
-          draggedSlot.appendChild(existingPhoto);
-          this.updateUserOrder();
-        } else
-        {
-          // Return dragged element to original position and don't allow drop
-          return;
-        }
-      } else if (this.draggedFromDropzone)
-      {
-        // Moving within dropzone - update the empty slot text
-        const draggedSlot = this.draggedElement.parentElement;
-        draggedSlot.innerHTML = `<span>Drop here<br><small>Position ${parseInt(draggedSlot.dataset.slotIndex) + 1}</small></span>`;
-        this.addDropListeners(draggedSlot);
-      }
-
-      // Place the dragged photo in the slot
-      slot.innerHTML = '';
-      slot.appendChild(this.draggedElement);
-
-      // Ensure fullscreen button still works after moving
-      this.ensureFullscreenButton(this.draggedElement);
-
-      this.updateUserOrder();
-      this.checkIfComplete();
+      this.handleDrop(slot);
     });
+  }
+
+  handleDrop(slot)
+  {
+    if (!this.draggedElement) return;
+
+    const slotIndex = parseInt(slot.dataset.slotIndex);
+    const photoId = parseInt(this.draggedElement.dataset.photoId);
+
+    // Check if slot is already occupied
+    const existingPhoto = slot.querySelector('.timeline-photo');
+
+    if (existingPhoto)
+    {
+      // Swap positions if dragging from dropzone
+      if (this.draggedFromDropzone)
+      {
+        const draggedSlot = this.draggedElement.parentElement;
+        draggedSlot.appendChild(existingPhoto);
+        this.updateUserOrder();
+      } else
+      {
+        // Return dragged element to original position and don't allow drop
+        return;
+      }
+    } else if (this.draggedFromDropzone)
+    {
+      // Moving within dropzone - update the empty slot text
+      const draggedSlot = this.draggedElement.parentElement;
+      draggedSlot.innerHTML = `<span>Drop here<br><small>Position ${parseInt(draggedSlot.dataset.slotIndex) + 1}</small></span>`;
+      this.addDropListeners(draggedSlot);
+    }
+
+    // Place the dragged photo in the slot
+    slot.innerHTML = '';
+    slot.appendChild(this.draggedElement);
+
+    // Ensure fullscreen button still works after moving
+    this.ensureFullscreenButton(this.draggedElement);
+
+    this.updateUserOrder();
+    this.checkIfComplete();
   }
 
   updateUserOrder()
@@ -485,7 +506,6 @@ export class TimelineChallengeGame extends BaseGame
           <h3 class="photo-fullscreen-title"></h3>
           <p class="photo-fullscreen-date"></p>
         </div>
-        <div class="photo-fullscreen-instruction">Click outside or press ESC to close</div>
       </div>
     `;
 
@@ -550,6 +570,86 @@ export class TimelineChallengeGame extends BaseGame
 
     modal.classList.remove('active');
     document.body.style.overflow = '';
+  }
+
+  touchStartHandler(e, element)
+  {
+    e.preventDefault();
+    this.draggedElement = element;
+    this.draggedFromDropzone = element.parentElement.id === 'timeline-dropzone';
+    this.touchStartPosition = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    };
+
+    element.classList.add('dragging');
+    element.style.zIndex = '1000';
+  }
+
+  touchMoveHandler(e, element)
+  {
+    if (!this.draggedElement) return;
+    e.preventDefault();
+
+    const touch = e.touches[0];
+    const rect = element.getBoundingClientRect();
+
+    // Move the element
+    element.style.position = 'fixed';
+    element.style.left = (touch.clientX - rect.width / 2) + 'px';
+    element.style.top = (touch.clientY - rect.height / 2) + 'px';
+    element.style.pointerEvents = 'none';
+
+    // Find drop target
+    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropSlot = elementBelow?.closest('.drop-slot');
+
+    // Remove previous hover effects
+    document.querySelectorAll('.drop-slot').forEach(slot =>
+    {
+      slot.classList.remove('drag-over');
+    });
+
+    // Add hover effect to current target
+    if (dropSlot)
+    {
+      dropSlot.classList.add('drag-over');
+    }
+  }
+
+  touchEndHandler(e, element)
+  {
+    if (!this.draggedElement) return;
+    e.preventDefault();
+
+    const touch = e.changedTouches[0];
+    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropSlot = elementBelow?.closest('.drop-slot');
+
+    // Reset element styling
+    element.style.position = '';
+    element.style.left = '';
+    element.style.top = '';
+    element.style.zIndex = '';
+    element.style.pointerEvents = '';
+    element.classList.remove('dragging');
+
+    // Remove all hover effects
+    document.querySelectorAll('.drop-slot').forEach(slot =>
+    {
+      slot.classList.remove('drag-over');
+    });
+
+    // Handle drop if valid target
+    if (dropSlot)
+    {
+      this.handleDrop(dropSlot);
+    }
+
+    // Reset state
+    this.draggedElement = null;
+    this.draggedFromDropzone = false;
+    this.touchStartPosition = null;
   }
 
   ensureFullscreenButton(photoElement)
