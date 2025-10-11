@@ -2190,3 +2190,316 @@ h2 {
 		margin: 10px;
 	}
 }
+
+/* TikTok-Style Vertical Scroll */
+.tiktok-scroll-container {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	background: #000;
+}
+
+.tiktok-scroll-wrapper {
+	display: flex;
+	flex-direction: column;
+	transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tiktok-photo-item {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.tiktok-photo-item img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+	border-radius: 0;
+}
+
+.tiktok-photo-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+	color: white;
+	padding: 40px 30px 60px;
+	pointer-events: none;
+}
+
+.tiktok-photo-info {
+	text-align: left;
+	max-width: 500px;
+}
+
+.tiktok-photo-title {
+	font-family: "Dancing Script", cursive;
+	font-size: 2.5em;
+	margin-bottom: 10px;
+	color: #ff69b4;
+	line-height: 1.2;
+}
+
+.tiktok-photo-date {
+	font-size: 1.2em;
+	margin-bottom: 15px;
+	opacity: 0.9;
+	color: #fff;
+}
+
+.tiktok-photo-counter {
+	font-size: 0.9em;
+	opacity: 0.7;
+	color: #ccc;
+}
+
+.tiktok-controls {
+	position: fixed;
+	right: 20px;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	z-index: 1000;
+}
+
+.tiktok-nav-btn {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: none;
+	background: rgba(255, 255, 255, 0.9);
+	color: #333;
+	font-size: 20px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tiktok-nav-btn:hover:not(:disabled) {
+	background: #fff;
+	transform: scale(1.1);
+}
+
+.tiktok-nav-btn:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+/* Final Slideshow Screen Override for TikTok Style */
+#final-slideshow {
+	padding: 0;
+}
+
+#final-slideshow .slideshow-content {
+	width: 100%;
+	height: 100vh;
+	max-width: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+#final-slideshow h2 {
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1000;
+	color: white;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+	margin: 0;
+	padding: 15px 30px;
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 25px;
+	backdrop-filter: blur(10px);
+}
+
+#slideshow-container {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#slideshow-controls {
+	display: none;
+}
+
+#slideshow-message {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.8);
+	padding: 20px 30px;
+	border-radius: 15px;
+	color: white;
+	text-align: center;
+	max-width: 400px;
+	z-index: 1000;
+	backdrop-filter: blur(10px);
+}
+
+#slideshow-message p {
+	margin: 8px 0;
+	font-size: 0.95em;
+	line-height: 1.4;
+}
+
+#restart-game-btn {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	background: rgba(255, 255, 255, 0.9);
+	color: #333;
+	padding: 10px 20px;
+	border-radius: 25px;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Mobile Responsive for TikTok Style */
+@media (max-width: 768px) {
+	.tiktok-photo-overlay {
+		padding: 30px 20px 50px;
+	}
+
+	.tiktok-photo-title {
+		font-size: 2em;
+	}
+
+	.tiktok-photo-date {
+		font-size: 1em;
+	}
+
+	.tiktok-controls {
+		right: 15px;
+		gap: 10px;
+	}
+
+	.tiktok-nav-btn {
+		width: 45px;
+		height: 45px;
+		font-size: 18px;
+	}
+
+	#final-slideshow h2 {
+		font-size: 1.3em;
+		padding: 10px 20px;
+		top: 15px;
+	}
+
+	#slideshow-message {
+		bottom: 15px;
+		padding: 15px 20px;
+		max-width: 350px;
+		margin: 0 15px;
+	}
+
+	#slideshow-message p {
+		font-size: 0.9em;
+	}
+
+	#restart-game-btn {
+		top: 15px;
+		right: 15px;
+		padding: 8px 15px;
+		font-size: 0.9em;
+	}
+}
+
+@media (max-width: 480px) {
+	.tiktok-photo-overlay {
+		padding: 20px 15px 40px;
+	}
+
+	.tiktok-photo-title {
+		font-size: 1.8em;
+	}
+
+	.tiktok-photo-date {
+		font-size: 0.9em;
+	}
+
+	.tiktok-photo-counter {
+		font-size: 0.8em;
+	}
+
+	.tiktok-controls {
+		right: 10px;
+		gap: 8px;
+	}
+
+	.tiktok-nav-btn {
+		width: 40px;
+		height: 40px;
+		font-size: 16px;
+	}
+
+	#final-slideshow h2 {
+		font-size: 1.2em;
+		padding: 8px 15px;
+		top: 10px;
+	}
+
+	#slideshow-message {
+		bottom: 10px;
+		padding: 12px 15px;
+		max-width: calc(100% - 20px);
+		margin: 0 10px;
+	}
+
+	#slideshow-message p {
+		font-size: 0.85em;
+		margin: 6px 0;
+	}
+
+	#restart-game-btn {
+		top: 10px;
+		right: 10px;
+		padding: 6px 12px;
+		font-size: 0.8em;
+	}
+}
+
+/* Landscape mobile adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+	.tiktok-photo-item img {
+		max-height: 90vh;
+		max-width: 90vw;
+	}
+
+	.tiktok-photo-overlay {
+		padding: 15px 20px 30px;
+	}
+
+	.tiktok-photo-title {
+		font-size: 1.5em;
+	}
+
+	#slideshow-message {
+		display: none;
+	}
+}
