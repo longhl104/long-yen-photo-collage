@@ -39,6 +39,12 @@ export class Router {
       handler: () => this.gameEngine.showFinalSlideshow()
     });
 
+    this.routes.set('/gallery', {
+      screen: 'photo-gallery-screen',
+      title: 'Our Love Story Gallery 💕',
+      handler: () => this.gameEngine.showPhotoGallery()
+    });
+
     // Individual games
     this.routes.set('/games/memory-match', {
       screen: 'memory-match-game',

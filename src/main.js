@@ -208,10 +208,19 @@ export class RomanticGameEngine
       }
     });
 
-    // Show final slideshow button if all games completed or in test mode
+    // Show gallery button if all games completed or in test mode
     if (this.gameState.completedGames.length === 5 || this.testMode)
     {
-      document.getElementById('final-slideshow-btn')?.classList.remove('hidden');
+      const galleryBtn = document.getElementById('view-gallery-btn');
+      if (galleryBtn)
+      {
+        galleryBtn.classList.remove('hidden');
+        // Setup click handler if not already done
+        if (!galleryBtn.onclick)
+        {
+          galleryBtn.onclick = () => this.router.navigate('/gallery');
+        }
+      }
     }
   }
 
@@ -584,6 +593,230 @@ export class RomanticGameEngine
       document.removeEventListener('keydown', this.tiktokKeyHandler);
       this.tiktokKeyHandler = null;
     }
+  }
+
+  // Photo Gallery
+  showPhotoGallery()
+  {
+    DOMUtils.showScreen('photo-gallery-screen');
+    this.initializePhotoGallery();
+  }
+
+  initializePhotoGallery()
+  {
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (!galleryGrid) return;
+
+    // Clear existing content
+    galleryGrid.innerHTML = '';
+
+    // Store current filter
+    this.currentGalleryFilter = 'all';
+    this.galleryPhotos = [...this.photos];
+
+    // Render all photos
+    this.renderGalleryPhotos();
+
+    // Setup filter buttons
+    this.setupGalleryFilters();
+
+    // Setup back button
+    const backBtn = document.getElementById('back-from-gallery');
+    if (backBtn)
+    {
+      backBtn.onclick = () => this.router.goToGames();
+    }
+  }
+
+  renderGalleryPhotos()
+  {
+    const galleryGrid = document.getElementById('gallery-grid');
+    if (!galleryGrid) return;
+
+    galleryGrid.innerHTML = '';
+
+    // Filter photos based on current filter
+    let filteredPhotos = this.galleryPhotos;
+    if (this.currentGalleryFilter !== 'all')
+    {
+      filteredPhotos = this.galleryPhotos.filter(photo =>
+      {
+        const year = new Date(photo.date).getFullYear().toString();
+        return year === this.currentGalleryFilter;
+      });
+    }
+
+    // Create gallery items
+    filteredPhotos.forEach((photo, index) =>
+    {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.dataset.index = this.galleryPhotos.indexOf(photo);
+
+      const img = document.createElement('img');
+      img.src = photo.src;
+      img.alt = photo.moment || 'Memory';
+      img.loading = 'lazy';
+
+      const overlay = document.createElement('div');
+      overlay.className = 'gallery-item-overlay';
+
+      const info = document.createElement('div');
+      info.className = 'gallery-item-info';
+      info.innerHTML = `
+        <h4>${photo.moment || 'Our Memory'}</h4>
+        <p>${new Date(photo.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })}</p>
+      `;
+
+      overlay.appendChild(info);
+      item.appendChild(img);
+      item.appendChild(overlay);
+
+      // Click to open modal
+      item.addEventListener('click', () => this.openGalleryModal(this.galleryPhotos.indexOf(photo)));
+
+      galleryGrid.appendChild(item);
+    });
+
+    // Show count
+    const header = document.querySelector('.gallery-header p');
+    if (header)
+    {
+      if (this.currentGalleryFilter === 'all')
+      {
+        header.textContent = `Every moment captured, every memory cherished (${filteredPhotos.length} photos)`;
+      } else
+      {
+        header.textContent = `${filteredPhotos.length} photos from ${this.currentGalleryFilter}`;
+      }
+    }
+  }
+
+  setupGalleryFilters()
+  {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(btn =>
+    {
+      btn.addEventListener('click', () =>
+      {
+        // Update active state
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Apply filter
+        this.currentGalleryFilter = btn.dataset.filter;
+        this.renderGalleryPhotos();
+      });
+    });
+  }
+
+  openGalleryModal(index)
+  {
+    const modal = document.getElementById('gallery-modal');
+    if (!modal) return;
+
+    this.currentGalleryPhotoIndex = index;
+    this.updateGalleryModal();
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // Setup modal controls if not already done
+    if (!this.galleryModalSetup)
+    {
+      this.setupGalleryModal();
+      this.galleryModalSetup = true;
+    }
+  }
+
+  setupGalleryModal()
+  {
+    const modal = document.getElementById('gallery-modal');
+    const closeBtn = modal.querySelector('.gallery-modal-close');
+    const prevBtn = modal.querySelector('.gallery-modal-prev');
+    const nextBtn = modal.querySelector('.gallery-modal-next');
+
+    closeBtn.addEventListener('click', () => this.closeGalleryModal());
+    prevBtn.addEventListener('click', () => this.navigateGalleryModal(-1));
+    nextBtn.addEventListener('click', () => this.navigateGalleryModal(1));
+
+    // Close on background click
+    modal.addEventListener('click', (e) =>
+    {
+      if (e.target === modal)
+      {
+        this.closeGalleryModal();
+      }
+    });
+
+    // Keyboard navigation
+    this.galleryModalKeyHandler = (e) =>
+    {
+      if (!modal.classList.contains('active')) return;
+
+      switch (e.key)
+      {
+        case 'Escape':
+          this.closeGalleryModal();
+          break;
+        case 'ArrowLeft':
+          this.navigateGalleryModal(-1);
+          break;
+        case 'ArrowRight':
+          this.navigateGalleryModal(1);
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', this.galleryModalKeyHandler);
+  }
+
+  updateGalleryModal()
+  {
+    const modal = document.getElementById('gallery-modal');
+    const photo = this.galleryPhotos[this.currentGalleryPhotoIndex];
+
+    const img = modal.querySelector('.gallery-modal-image');
+    const title = modal.querySelector('.gallery-modal-title');
+    const date = modal.querySelector('.gallery-modal-date');
+    const emotion = modal.querySelector('.gallery-modal-emotion');
+
+    img.src = photo.src;
+    img.alt = photo.moment || 'Memory';
+    title.textContent = photo.moment || 'Our Memory';
+    date.textContent = new Date(photo.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    emotion.textContent = `💕 ${photo.emotion}`;
+
+    // Update navigation buttons visibility
+    const prevBtn = modal.querySelector('.gallery-modal-prev');
+    const nextBtn = modal.querySelector('.gallery-modal-next');
+
+    prevBtn.style.display = this.currentGalleryPhotoIndex > 0 ? 'flex' : 'none';
+    nextBtn.style.display = this.currentGalleryPhotoIndex < this.galleryPhotos.length - 1 ? 'flex' : 'none';
+  }
+
+  navigateGalleryModal(direction)
+  {
+    const newIndex = this.currentGalleryPhotoIndex + direction;
+    if (newIndex >= 0 && newIndex < this.galleryPhotos.length)
+    {
+      this.currentGalleryPhotoIndex = newIndex;
+      this.updateGalleryModal();
+    }
+  }
+
+  closeGalleryModal()
+  {
+    const modal = document.getElementById('gallery-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
   }
 
   showTestModeNotification()

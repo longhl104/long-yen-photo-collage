@@ -113,9 +113,13 @@
 						<div class="game-status locked">Complete Timeline Challenge</div>
 					</div>
 				</div>
-				<!-- <button id="final-slideshow-btn" class="btn-primary hidden">
-					View Our Love Story 💕
-				</button> -->
+				<button
+					id="view-gallery-btn"
+					class="btn-primary hidden"
+					style="margin-top: 30px; padding: 15px 40px; font-size: 18px"
+				>
+					📸 View All Our Photos 💕
+				</button>
 			</div>
 
 			<!-- Memory Match Game -->
@@ -291,6 +295,60 @@
 					<h3>Memory Token Unlocked! 🎉</h3>
 					<div id="token-content"></div>
 					<button id="close-token-modal" class="btn-primary">Continue</button>
+				</div>
+			</div>
+
+			<!-- Photo Gallery Screen -->
+			<div id="photo-gallery-screen" class="screen">
+				<div class="gallery-header">
+					<h2>Our Love Story Gallery 💕</h2>
+					<p class="gallery-subtitle">
+						Every moment captured, every memory cherished
+					</p>
+					<button id="back-from-gallery" class="btn-secondary">
+						← Back to Games
+					</button>
+				</div>
+				<div class="gallery-filters">
+					<button class="filter-btn active" data-filter="all">
+						All Photos
+					</button>
+					<button class="filter-btn" data-filter="2018">2018</button>
+					<button class="filter-btn" data-filter="2019">2019</button>
+					<button class="filter-btn" data-filter="2020">2020</button>
+					<button class="filter-btn" data-filter="2021">2021</button>
+					<button class="filter-btn" data-filter="2022">2022</button>
+					<button class="filter-btn" data-filter="2023">2023</button>
+					<button class="filter-btn" data-filter="2024">2024</button>
+					<button class="filter-btn" data-filter="2025">2025</button>
+				</div>
+				<div id="gallery-grid" class="gallery-grid"></div>
+			</div>
+
+			<!-- Gallery Photo Modal -->
+			<div id="gallery-modal" class="gallery-modal">
+				<div class="gallery-modal-content">
+					<button class="gallery-modal-close" aria-label="Close">
+						&times;
+					</button>
+					<button
+						class="gallery-modal-nav gallery-modal-prev"
+						aria-label="Previous"
+					>
+						‹
+					</button>
+					<button
+						class="gallery-modal-nav gallery-modal-next"
+						aria-label="Next"
+					>
+						›
+					</button>
+					<img class="gallery-modal-image" alt="Photo" />
+					<div class="gallery-modal-info">
+						<h3 class="gallery-modal-title"></h3>
+						<p class="gallery-modal-date"></p>
+						<p class="gallery-modal-emotion"></p>
+					</div>
 				</div>
 			</div>
 
