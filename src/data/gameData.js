@@ -73,28 +73,28 @@ export const memoryTokenMessages = [
 // Trivia questions about your relationship
 export const triviaQuestions = [
   {
-    question: "In which year did our beautiful love story begin?",
-    options: ["2017", "2018", "2019", "2020"],
+    question: "In which date did our beautiful love story begin?",
+    options: ["14 July 2017", "14 July 2018", "7 July 2019", "17 April 2018"],
     correct: 1,
-    explanation: "Our amazing journey started in 2018 - what a perfect year to fall in love! 💕"
+    explanation: "Our amazing journey started on 14 July 2018 - what a perfect day to fall in love! 💕"
   },
   {
     question: "How many years have we been creating memories together?",
-    options: ["5 years", "6 years", "7 years", "8 years"],
-    correct: 2,
-    explanation: "We've been making beautiful memories for 7 incredible years! Time flies when you're in love! ✨"
+    options: ["6 years", "7 years", "8 years", "9 years"],
+    correct: 3,
+    explanation: "We met in 2016 at the English class, so we've been together for 9 wonderful years! 🎉"
   },
   {
     question: "What season did we have our first photos together?",
     options: ["Spring", "Summer", "Fall", "Winter"],
-    correct: 2,
-    explanation: "Fall 2018 - the season when our love story began to bloom! 🍂❤️"
+    correct: 1,
+    explanation: "Summer 2018 - the season when our love story began to bloom! 🍂❤️"
   },
   {
-    question: "Which year had the most special moments for us?",
-    options: ["2019", "2020", "2021", "2022"],
-    correct: 1,
-    explanation: "2020 was incredible - despite everything, we grew closer and made so many memories! 💫"
+    question: "Which special place did we visit in our photos?",
+    options: ["Beach", "Mountains", "Wildlife Park", "All of the above"],
+    correct: 3,
+    explanation: "We've explored so many amazing places together - from beaches to mountains to wildlife parks! 🌏"
   },
   {
     question: "What's the most common emotion in our photos?",
@@ -103,14 +103,14 @@ export const triviaQuestions = [
     explanation: "Happiness radiates from almost every photo - you bring so much joy to my life! 😊💕"
   },
   {
-    question: "How many photos do we have in our love story collection?",
-    options: ["25-30", "30-35", "35-40", "40+"],
+    question: "What do our thousands of photos together represent?",
+    options: ["Just memories", "Our growth together", "Our love story", "All of the above"],
     correct: 3,
-    explanation: "We have over 40 beautiful photos capturing our journey - each one tells our story! 📸💖"
+    explanation: "Every photo is a chapter in our beautiful love story - thousands of moments capturing our growth, memories, and endless love! 📸💖"
   },
   {
     question: "What makes our relationship special?",
-    options: ["We never argue", "We laugh together", "We grow together", "All of the above"],
+    options: ["We always argue", "We laugh together", "We grow together", "All of the above"],
     correct: 3,
     explanation: "Everything! But especially how we laugh, grow, and support each other through it all! 🥰"
   },
