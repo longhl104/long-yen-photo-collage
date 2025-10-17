@@ -44,6 +44,13 @@ export class TimelineChallengeGame extends BaseGame
     this.userOrder = [];
     this.draggedElement = null;
     this.draggedFromDropzone = false;
+
+    // Hide check button at start of round
+    const checkBtn = document.getElementById('check-order-btn');
+    if (checkBtn)
+    {
+      checkBtn.style.display = 'none';
+    }
   }
 
   selectPhotosForRound()
@@ -119,7 +126,7 @@ export class TimelineChallengeGame extends BaseGame
       overlay.innerHTML = `
         <div class="photo-info">
           <strong>${photo.moment}</strong>
-          <small>${this.formatDate(photo.date)}</small>
+          <!-- <small>${this.formatDate(photo.date)}</small> -->
         </div>
       `;
 
@@ -195,6 +202,43 @@ export class TimelineChallengeGame extends BaseGame
 
       dropZone.appendChild(slot);
     }
+
+    // Add check order button container
+    this.setupCheckButton();
+  }
+
+  setupCheckButton()
+  {
+    const timelineContent = document.getElementById('timeline-content');
+    if (!timelineContent) return;
+
+    // Remove existing button if any
+    const existingBtn = document.getElementById('check-order-btn');
+    if (existingBtn) existingBtn.remove();
+
+    // Create check button
+    const btnContainer = document.createElement('div');
+    btnContainer.id = 'check-order-btn';
+    btnContainer.style.cssText = `
+      display: none;
+      margin: 20px auto;
+      text-align: center;
+    `;
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'btn-primary';
+    checkBtn.textContent = '✓ Check My Order';
+    checkBtn.style.cssText = `
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    `;
+
+    checkBtn.addEventListener('click', () => this.evaluateOrder());
+
+    btnContainer.appendChild(checkBtn);
+    timelineContent.appendChild(btnContainer);
   }
 
   addDragListeners(element)
@@ -266,16 +310,24 @@ export class TimelineChallengeGame extends BaseGame
 
     if (existingPhoto)
     {
-      // Swap positions if dragging from dropzone
+      // Always allow swapping - either from photos container or between slots
+      const draggedSlot = this.draggedElement.parentElement;
+
       if (this.draggedFromDropzone)
       {
-        const draggedSlot = this.draggedElement.parentElement;
+        // Swapping between two slots
         draggedSlot.appendChild(existingPhoto);
-        this.updateUserOrder();
+        this.ensureFullscreenButton(existingPhoto);
       } else
       {
-        // Return dragged element to original position and don't allow drop
-        return;
+        // Swapping from photos container to occupied slot
+        // Return existing photo to photos container
+        const photosContainer = document.getElementById('timeline-photos');
+        if (photosContainer)
+        {
+          photosContainer.appendChild(existingPhoto);
+          this.ensureFullscreenButton(existingPhoto);
+        }
       }
     } else if (this.draggedFromDropzone)
     {
@@ -319,16 +371,34 @@ export class TimelineChallengeGame extends BaseGame
   {
     // Check if all slots are filled
     const filledSlots = this.userOrder.filter(photo => photo !== null);
+    const checkBtn = document.getElementById('check-order-btn');
 
     if (filledSlots.length === this.photosPerRound)
     {
-      // All slots filled, check the order
-      setTimeout(() => this.evaluateOrder(), 500);
+      // Show the check button instead of auto-evaluating
+      if (checkBtn)
+      {
+        checkBtn.style.display = 'block';
+      }
+    } else
+    {
+      // Hide the check button if not all slots are filled
+      if (checkBtn)
+      {
+        checkBtn.style.display = 'none';
+      }
     }
   }
 
   evaluateOrder()
   {
+    // Hide the check button
+    const checkBtn = document.getElementById('check-order-btn');
+    if (checkBtn)
+    {
+      checkBtn.style.display = 'none';
+    }
+
     const isCorrect = this.userOrder.every((photo, index) =>
     {
       return photo && photo.src === this.correctOrder[index].src;
