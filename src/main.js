@@ -25,7 +25,7 @@ export class RomanticGameEngine
     this.triviaQuestions = triviaQuestions;
 
     // Test mode for development - allows bypassing game unlock requirements
-    this.testMode = this.isDevEnvironment();
+    this.testMode = this.loadTestMode();
 
     // Initialize game components
     this.memoryMatchGame = new MemoryMatchGame(this);
@@ -38,6 +38,43 @@ export class RomanticGameEngine
     this.photoScavengerHuntGame = new PhotoScavengerHuntGame(this);
 
     this.init();
+  }
+
+  loadTestMode()
+  {
+    // Load test mode state from localStorage
+    if (this.isDevEnvironment())
+    {
+      try
+      {
+        const saved = localStorage.getItem('romantic-game-test-mode');
+        if (saved !== null)
+        {
+          const testMode = JSON.parse(saved);
+          console.log(`💾 Test mode loaded: ${testMode ? 'ENABLED' : 'DISABLED'}`);
+          return testMode;
+        }
+      } catch (error)
+      {
+        console.error('Failed to load test mode:', error);
+      }
+    }
+    return this.isDevEnvironment();
+  }
+
+  saveTestMode()
+  {
+    if (this.isDevEnvironment())
+    {
+      try
+      {
+        localStorage.setItem('romantic-game-test-mode', JSON.stringify(this.testMode));
+        console.log('💾 Test mode saved');
+      } catch (error)
+      {
+        console.error('Failed to save test mode:', error);
+      }
+    }
   }
 
   isDevEnvironment()
@@ -57,6 +94,7 @@ export class RomanticGameEngine
     if (this.isDevEnvironment())
     {
       this.testMode = !this.testMode;
+      this.saveTestMode();
       console.log(`Test mode ${this.testMode ? 'ENABLED' : 'DISABLED'}`);
 
       // Update game availability immediately
@@ -159,9 +197,32 @@ export class RomanticGameEngine
       DOMUtils.hideScreen('loading-screen');
       this.gameState.updateLoveLevel();
 
+      // Show welcome back message if game was restored
+      if (this.gameState.memoryTokens > 0)
+      {
+        this.showWelcomeBackMessage();
+      }
+
       // Finish loading and let the router handle navigation
       this.router.finishLoading();
     }, 3000);
+  }
+
+  showWelcomeBackMessage()
+  {
+    const message = document.createElement('div');
+    message.className = 'save-indicator';
+    message.style.bottom = '80px'; // Position above normal save indicator
+    message.innerHTML = `Welcome back! Progress restored (${this.gameState.memoryTokens}/5 games completed)`;
+    document.body.appendChild(message);
+
+    setTimeout(() =>
+    {
+      if (message.parentElement)
+      {
+        message.remove();
+      }
+    }, 4000);
   }
 
   showWelcome()
@@ -310,10 +371,28 @@ export class RomanticGameEngine
 
   restartGame()
   {
+    // Confirm before restarting
+    if (!confirm('Are you sure you want to restart the game? All progress will be lost.'))
+    {
+      return;
+    }
+
     this.gameState.reset();
+    this.gameState.clearStorage();
+
+    // Clear test mode in dev
+    if (this.isDevEnvironment())
+    {
+      this.testMode = true;
+      this.saveTestMode();
+    }
+
     DOMUtils.showScreen('welcome-screen');
     this.gameState.updateLoveLevel();
     this.stopSlideshow();
+
+    // Navigate to home
+    this.router.navigate('/');
   }
 
   // Game implementations
@@ -367,7 +446,8 @@ export class RomanticGameEngine
   stopSlideshow()
   {
     // Stop any auto-play if implemented
-    if (this.slideshowInterval) {
+    if (this.slideshowInterval)
+    {
       clearInterval(this.slideshowInterval);
       this.slideshowInterval = null;
     }
@@ -383,13 +463,14 @@ export class RomanticGameEngine
 
     // Create TikTok-style vertical scroll container
     container.className = 'tiktok-scroll-container';
-    
+
     // Create scroll wrapper
     const scrollWrapper = document.createElement('div');
     scrollWrapper.className = 'tiktok-scroll-wrapper';
-    
+
     // Add all photos as full-screen items
-    this.photos.forEach((photo, index) => {
+    this.photos.forEach((photo, index) =>
+    {
       const photoItem = document.createElement('div');
       photoItem.className = 'tiktok-photo-item';
       photoItem.dataset.index = index;
@@ -401,14 +482,14 @@ export class RomanticGameEngine
 
       const overlay = document.createElement('div');
       overlay.className = 'tiktok-photo-overlay';
-      
+
       const info = document.createElement('div');
       info.className = 'tiktok-photo-info';
-      
+
       const title = document.createElement('h2');
       title.className = 'tiktok-photo-title';
       title.textContent = photo.moment || `Memory ${index + 1}`;
-      
+
       const date = document.createElement('p');
       date.className = 'tiktok-photo-date';
       const photoDate = new Date(photo.date);
@@ -437,7 +518,7 @@ export class RomanticGameEngine
 
     // Initialize TikTok-style scrolling
     this.initializeTikTokScrolling(scrollWrapper);
-    
+
     // Add navigation controls
     this.addTikTokControls(container);
   }
@@ -446,19 +527,22 @@ export class RomanticGameEngine
   {
     this.currentPhotoIndex = 0;
     this.isScrolling = false;
-    
+
     // Smooth scroll to first photo
     this.scrollToPhoto(0);
 
     // Handle wheel events for desktop
-    container.addEventListener('wheel', (e) => {
+    container.addEventListener('wheel', (e) =>
+    {
       e.preventDefault();
       if (this.isScrolling) return;
-      
-      if (e.deltaY > 0) {
+
+      if (e.deltaY > 0)
+      {
         // Scroll down
         this.navigateToNextPhoto();
-      } else {
+      } else
+      {
         // Scroll up  
         this.navigateToPrevPhoto();
       }
@@ -468,22 +552,27 @@ export class RomanticGameEngine
     let touchStartY = 0;
     let touchEndY = 0;
 
-    container.addEventListener('touchstart', (e) => {
+    container.addEventListener('touchstart', (e) =>
+    {
       touchStartY = e.touches[0].clientY;
     });
 
-    container.addEventListener('touchend', (e) => {
+    container.addEventListener('touchend', (e) =>
+    {
       if (this.isScrolling) return;
-      
+
       touchEndY = e.changedTouches[0].clientY;
       const touchDiff = touchStartY - touchEndY;
-      
+
       // Minimum swipe distance
-      if (Math.abs(touchDiff) > 50) {
-        if (touchDiff > 0) {
+      if (Math.abs(touchDiff) > 50)
+      {
+        if (touchDiff > 0)
+        {
           // Swipe up - next photo
           this.navigateToNextPhoto();
-        } else {
+        } else
+        {
           // Swipe down - previous photo
           this.navigateToPrevPhoto();
         }
@@ -491,10 +580,13 @@ export class RomanticGameEngine
     });
 
     // Handle keyboard navigation
-    this.tiktokKeyHandler = (e) => {
-      if (document.getElementById('final-slideshow').classList.contains('screen') && 
-          !document.getElementById('final-slideshow').style.display === 'none') {
-        switch(e.key) {
+    this.tiktokKeyHandler = (e) =>
+    {
+      if (document.getElementById('final-slideshow').classList.contains('screen') &&
+        !document.getElementById('final-slideshow').style.display === 'none')
+      {
+        switch (e.key)
+        {
           case 'ArrowDown':
           case ' ':
             e.preventDefault();
@@ -539,7 +631,8 @@ export class RomanticGameEngine
 
   navigateToNextPhoto()
   {
-    if (this.currentPhotoIndex < this.photos.length - 1) {
+    if (this.currentPhotoIndex < this.photos.length - 1)
+    {
       this.currentPhotoIndex++;
       this.scrollToPhoto(this.currentPhotoIndex);
     }
@@ -547,7 +640,8 @@ export class RomanticGameEngine
 
   navigateToPrevPhoto()
   {
-    if (this.currentPhotoIndex > 0) {
+    if (this.currentPhotoIndex > 0)
+    {
       this.currentPhotoIndex--;
       this.scrollToPhoto(this.currentPhotoIndex);
     }
@@ -557,16 +651,17 @@ export class RomanticGameEngine
   {
     this.isScrolling = true;
     this.currentPhotoIndex = index;
-    
+
     const container = document.querySelector('.tiktok-scroll-wrapper');
     const photoHeight = window.innerHeight;
-    
+
     container.style.transform = `translateY(-${index * photoHeight}px)`;
-    
+
     // Update navigation button states
     this.updateTikTokNavigation();
-    
-    setTimeout(() => {
+
+    setTimeout(() =>
+    {
       this.isScrolling = false;
     }, 500);
   }
@@ -575,13 +670,15 @@ export class RomanticGameEngine
   {
     const upBtn = document.querySelector('.tiktok-up-btn');
     const downBtn = document.querySelector('.tiktok-down-btn');
-    
-    if (upBtn) {
+
+    if (upBtn)
+    {
       upBtn.style.opacity = this.currentPhotoIndex === 0 ? '0.3' : '1';
       upBtn.disabled = this.currentPhotoIndex === 0;
     }
-    
-    if (downBtn) {
+
+    if (downBtn)
+    {
       downBtn.style.opacity = this.currentPhotoIndex === this.photos.length - 1 ? '0.3' : '1';
       downBtn.disabled = this.currentPhotoIndex === this.photos.length - 1;
     }
@@ -589,7 +686,8 @@ export class RomanticGameEngine
 
   cleanupTikTokScrolling()
   {
-    if (this.tiktokKeyHandler) {
+    if (this.tiktokKeyHandler)
+    {
       document.removeEventListener('keydown', this.tiktokKeyHandler);
       this.tiktokKeyHandler = null;
     }
@@ -666,10 +764,10 @@ export class RomanticGameEngine
       info.innerHTML = `
         <h4>${photo.moment || 'Our Memory'}</h4>
         <p>${new Date(photo.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        })}</p>
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })}</p>
       `;
 
       overlay.appendChild(info);
@@ -872,8 +970,75 @@ export class RomanticGameEngine
         }
       };
 
+      // Add save/load commands
+      window.gameSave = {
+        status: () =>
+        {
+          const saved = localStorage.getItem(this.gameState.storageKey);
+          const route = localStorage.getItem(this.router.routeStorageKey);
+          const testMode = localStorage.getItem('romantic-game-test-mode');
+          console.log('%c💾 Save Status:', 'font-weight: bold; color: #4CAF50;');
+          console.log('Game State:', saved ? JSON.parse(saved) : 'No save data');
+          console.log('Last Route:', route || 'None');
+          console.log('Test Mode:', testMode ? JSON.parse(testMode) : 'Default');
+        },
+        clear: () =>
+        {
+          if (confirm('Clear all saved data? This will reset your progress.'))
+          {
+            this.gameState.clearStorage();
+            localStorage.removeItem(this.router.routeStorageKey);
+            localStorage.removeItem('romantic-game-test-mode');
+            console.log('💾 All saved data cleared. Refresh the page to start fresh.');
+          }
+        },
+        export: () =>
+        {
+          const data = {
+            gameState: JSON.parse(localStorage.getItem(this.gameState.storageKey) || '{}'),
+            route: localStorage.getItem(this.router.routeStorageKey),
+            testMode: localStorage.getItem('romantic-game-test-mode'),
+            exportedAt: new Date().toISOString()
+          };
+          console.log('%c💾 Save Data Export:', 'font-weight: bold; color: #2196F3;');
+          console.log(JSON.stringify(data, null, 2));
+          return data;
+        },
+        import: (data) =>
+        {
+          try
+          {
+            if (data.gameState)
+            {
+              localStorage.setItem(this.gameState.storageKey, JSON.stringify(data.gameState));
+            }
+            if (data.route)
+            {
+              localStorage.setItem(this.router.routeStorageKey, data.route);
+            }
+            if (data.testMode !== undefined)
+            {
+              localStorage.setItem('romantic-game-test-mode', data.testMode);
+            }
+            console.log('💾 Save data imported successfully. Refresh the page to apply.');
+          } catch (error)
+          {
+            console.error('Failed to import save data:', error);
+          }
+        },
+        help: () =>
+        {
+          console.log('%c💾 Save Management Commands:', 'font-weight: bold; color: #4CAF50;');
+          console.log('gameSave.status() - View current save data');
+          console.log('gameSave.clear() - Clear all saved data');
+          console.log('gameSave.export() - Export save data');
+          console.log('gameSave.import(data) - Import save data');
+        }
+      };
+
       console.log('%c🧪 Development Mode Active', 'font-weight: bold; color: #ff69b4;');
       console.log('Type gameTestMode.help() for test mode commands');
+      console.log('Type gameSave.help() for save management commands');
     }
   }
 }

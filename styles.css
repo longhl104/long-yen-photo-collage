@@ -1846,6 +1846,51 @@ h2 {
 	border-color: rgba(255, 255, 255, 0.5);
 }
 
+/* Save Indicator */
+.save-indicator {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background: rgba(76, 175, 80, 0.95);
+	color: white;
+	padding: 12px 20px;
+	border-radius: 25px;
+	font-size: 0.9em;
+	font-weight: 600;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+	z-index: 2000;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	animation: slideInUp 0.4s ease-out, fadeOut 0.4s ease-out 2.6s forwards;
+	pointer-events: none;
+}
+
+.save-indicator::before {
+	content: "💾";
+	font-size: 1.2em;
+}
+
+@keyframes slideInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
 .share-btn {
 	margin-left: 10px;
 	font-size: 0.9em !important;

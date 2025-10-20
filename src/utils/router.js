@@ -1,25 +1,30 @@
 // Simple hash-based router for the romantic game
-export class Router {
-  constructor(gameEngine) {
+export class Router
+{
+  constructor(gameEngine)
+  {
     this.gameEngine = gameEngine;
     this.routes = new Map();
     this.currentRoute = null;
     this.isLoading = true;
+    this.routeStorageKey = 'romantic-game-last-route';
     this.init();
   }
 
-  init() {
+  init()
+  {
     // Define all available routes
     this.defineRoutes();
-    
+
     // Listen for hash changes
     window.addEventListener('hashchange', () => this.handleRouteChange());
     window.addEventListener('load', () => this.handleRouteChange());
-    
+
     // Don't handle initial route during loading - let the game engine handle it after loading
   }
 
-  defineRoutes() {
+  defineRoutes()
+  {
     // Main screens
     this.routes.set('/', {
       screen: 'welcome-screen',
@@ -54,7 +59,7 @@ export class Router {
     });
 
     this.routes.set('/games/photo-puzzle', {
-      screen: 'photo-puzzle-game', 
+      screen: 'photo-puzzle-game',
       title: 'Photo Puzzle - Our Love Story Game',
       handler: () => this.gameEngine.selectGame('photo-puzzle'),
       requiresUnlock: true,
@@ -63,7 +68,7 @@ export class Router {
 
     this.routes.set('/games/guess-moment', {
       screen: 'guess-moment-game',
-      title: 'Guess the Moment - Our Love Story Game', 
+      title: 'Guess the Moment - Our Love Story Game',
       handler: () => this.gameEngine.selectGame('guess-moment'),
       requiresUnlock: true,
       unlockAfter: 'photo-puzzle'
@@ -110,27 +115,32 @@ export class Router {
     });
   }
 
-  handleRouteChange() {
+  handleRouteChange()
+  {
     // Don't handle route changes during loading
-    if (this.isLoading) {
+    if (this.isLoading)
+    {
       return;
     }
-    
+
     const hash = window.location.hash.slice(1) || '/';
     this.navigate(hash, false);
   }
 
-  navigate(path, pushState = true) {
+  navigate(path, pushState = true)
+  {
     const route = this.routes.get(path);
-    
-    if (!route) {
+
+    if (!route)
+    {
       // Redirect to home for unknown routes
       this.navigate('/', true);
       return;
     }
 
     // Check if route requires unlock
-    if (route.requiresUnlock && !this.isRouteUnlocked(route)) {
+    if (route.requiresUnlock && !this.isRouteUnlocked(route))
+    {
       // Redirect to games selection with notification
       this.navigate('/games', true);
       this.showUnlockNotification(route.unlockAfter);
@@ -138,35 +148,75 @@ export class Router {
     }
 
     // Update URL if needed
-    if (pushState && window.location.hash !== '#' + path) {
+    if (pushState && window.location.hash !== '#' + path)
+    {
       window.location.hash = path;
       return; // This will trigger hashchange event
     }
 
     // Update document title
     document.title = route.title;
-    
+
     // Store current route
     this.currentRoute = path;
-    
+
+    // Save route to localStorage
+    this.saveLastRoute(path);
+
     // Execute route handler
     route.handler();
-    
+
     // Update navigation state
     this.updateNavigationUI(path);
   }
 
-  isRouteUnlocked(route) {
+  saveLastRoute(path)
+  {
+    try
+    {
+      localStorage.setItem(this.routeStorageKey, path);
+      console.log('💾 Route saved:', path);
+    } catch (error)
+    {
+      console.error('Failed to save route:', error);
+    }
+  }
+
+  loadLastRoute()
+  {
+    try
+    {
+      const saved = localStorage.getItem(this.routeStorageKey);
+      if (saved && saved !== '/')
+      {
+        // Check if current hash is empty or just '/'
+        const currentHash = window.location.hash.slice(1) || '/';
+        if (currentHash === '/')
+        {
+          console.log('💾 Restoring last route:', saved);
+          return saved;
+        }
+      }
+    } catch (error)
+    {
+      console.error('Failed to load last route:', error);
+    }
+    return null;
+  }
+
+  isRouteUnlocked(route)
+  {
     if (!route.requiresUnlock) return true;
-    
+
     // Allow access in test mode
     if (this.gameEngine.testMode) return true;
-    
+
     const requiredGame = route.unlockAfter;
     return this.gameEngine.gameState.completedGames.includes(requiredGame);
   }
 
-  showUnlockNotification(requiredGame) {
+  showUnlockNotification(requiredGame)
+  {
     const notification = document.createElement('div');
     notification.className = 'route-notification';
     notification.innerHTML = `
@@ -176,21 +226,24 @@ export class Router {
         <button onclick="this.parentElement.parentElement.remove()">OK</button>
       </div>
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Auto-remove after 3 seconds
-    setTimeout(() => {
-      if (notification.parentElement) {
+    setTimeout(() =>
+    {
+      if (notification.parentElement)
+      {
         notification.remove();
       }
     }, 3000);
   }
 
-  getGameTitle(gameKey) {
+  getGameTitle(gameKey)
+  {
     const titles = {
       'memory-match': 'Memory Match',
-      'photo-puzzle': 'Photo Puzzle', 
+      'photo-puzzle': 'Photo Puzzle',
       'guess-moment': 'Guess the Moment',
       'trivia-quiz': 'Trivia Quiz',
       'timeline': 'Timeline Challenge',
@@ -201,13 +254,17 @@ export class Router {
     return titles[gameKey] || gameKey;
   }
 
-  updateNavigationUI(currentPath) {
+  updateNavigationUI(currentPath)
+  {
     // Update active nav items if they exist
-    document.querySelectorAll('[data-route]').forEach(link => {
+    document.querySelectorAll('[data-route]').forEach(link =>
+    {
       const linkPath = link.dataset.route;
-      if (linkPath === currentPath) {
+      if (linkPath === currentPath)
+      {
         link.classList.add('active');
-      } else {
+      } else
+      {
         link.classList.remove('active');
       }
     });
@@ -216,83 +273,113 @@ export class Router {
     this.updateBreadcrumbs(currentPath);
   }
 
-  updateBreadcrumbs(currentPath) {
+  updateBreadcrumbs(currentPath)
+  {
     const breadcrumbContainer = document.getElementById('breadcrumbs');
     if (!breadcrumbContainer) return;
 
     let breadcrumbs = [];
-    
+
     // Hide breadcrumbs for home/welcome screen
-    if (currentPath === '/') {
+    if (currentPath === '/')
+    {
       breadcrumbContainer.classList.add('hidden');
       return;
-    } else {
+    } else
+    {
       breadcrumbContainer.classList.remove('hidden');
     }
-    
-    if (currentPath === '/games') {
+
+    if (currentPath === '/games')
+    {
       breadcrumbs = [
         { text: 'Home', path: '/' },
         { text: 'Games', path: '/games' }
       ];
-    } else if (currentPath.startsWith('/games/')) {
+    } else if (currentPath.startsWith('/games/'))
+    {
       const gameName = currentPath.split('/')[2];
       breadcrumbs = [
         { text: 'Home', path: '/' },
         { text: 'Games', path: '/games' },
         { text: this.getGameTitle(gameName), path: currentPath }
       ];
-    } else if (currentPath === '/slideshow') {
+    } else if (currentPath === '/slideshow')
+    {
       breadcrumbs = [
         { text: 'Home', path: '/' },
         { text: 'Slideshow', path: '/slideshow' }
       ];
     }
 
-    breadcrumbContainer.innerHTML = breadcrumbs.map((crumb, index) => {
+    breadcrumbContainer.innerHTML = breadcrumbs.map((crumb, index) =>
+    {
       const isLast = index === breadcrumbs.length - 1;
-      if (isLast) {
+      if (isLast)
+      {
         return `<span class="breadcrumb-current">${crumb.text}</span>`;
-      } else {
+      } else
+      {
         return `<a href="#${crumb.path}" class="breadcrumb-link">${crumb.text}</a>`;
       }
     }).join(' <span class="breadcrumb-separator">›</span> ');
   }
 
   // Programmatic navigation methods
-  goHome() {
+  goHome()
+  {
     this.navigate('/');
   }
 
-  goToGames() {
+  goToGames()
+  {
     this.navigate('/games');
   }
 
-  goToGame(gameType) {
+  goToGame(gameType)
+  {
     this.navigate(`/games/${gameType}`);
   }
 
-  goToSlideshow() {
+  goToSlideshow()
+  {
     this.navigate('/slideshow');
   }
 
-  goBack() {
+  goBack()
+  {
     window.history.back();
   }
 
   // Finish loading and enable routing
-  finishLoading() {
+  finishLoading()
+  {
     this.isLoading = false;
+
+    // Try to restore last route if no hash is set
+    const currentHash = window.location.hash.slice(1) || '/';
+    if (currentHash === '/')
+    {
+      const lastRoute = this.loadLastRoute();
+      if (lastRoute)
+      {
+        this.navigate(lastRoute);
+        return;
+      }
+    }
+
     // Now handle the initial route
     this.handleRouteChange();
   }
 
   // Get current route info
-  getCurrentRoute() {
+  getCurrentRoute()
+  {
     return this.currentRoute;
   }
 
-  isCurrentRoute(path) {
+  isCurrentRoute(path)
+  {
     return this.currentRoute === path;
   }
 }
